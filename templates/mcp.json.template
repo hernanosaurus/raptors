@@ -1,0 +1,15 @@
+{
+  "//": "Per-project MCP server config. Copy to .mcp.json (repo root) and edit.",
+  "//what": "MCP servers give the agents access to EXTERNAL tools — a database, an API, Jira, Figma, etc. Only add servers this project actually needs.",
+  "//secrets": "Never commit real secrets here. Use env var references and keep the real values in your shell/.env (gitignored).",
+  "mcpServers": {
+    "//example-postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "${DATABASE_URL}"]
+    },
+    "//example-filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./data"]
+    }
+  }
+}

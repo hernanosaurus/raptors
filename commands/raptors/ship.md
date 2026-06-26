@@ -26,7 +26,7 @@ Run the four-agent pipeline end to end. Use the Agent tool to invoke each stage;
    - If invoked and it returns `ISSUES-FOUND`, send the findings (severity-ordered) to the **coder** to remediate, then re-run the **tester** and re-run the **security-reviewer** on the new diff. Loop at most twice.
 5. **reviewer** — review the full diff.
    - If `REQUEST_CHANGES`, send the blocking issues to the **coder**, then re-run the **tester** and **reviewer** on the new diff. Loop at most twice.
-6. **scribe** (knowledge capture) — after `APPROVE`, give the scribe a summary of what was built and any non-obvious decision/gotcha discovered. It records anything durable in `CLAUDE.md`/`docs` so the next run starts warmer. If nothing was learned worth keeping, it returns `nothing-to-capture` — that's fine.
+6. **scribe** (knowledge capture) — after `APPROVE`, give the scribe a summary of what was built and any non-obvious decision/gotcha discovered. It records anything durable in `CLAUDE.md`/`docs` so the next run starts warmer. **If this task came from the backlog** (e.g. you ran `/raptors:ship T3`), it also checks the task off in `docs/backlog.md`. If nothing was learned worth keeping, it returns `nothing-to-capture` — that's fine.
 
 ## Optional stages
 

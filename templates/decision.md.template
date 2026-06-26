@@ -1,0 +1,17 @@
+# NNNN — <short decision title>
+
+- **Date:** YYYY-MM-DD
+- **Status:** proposed | accepted | superseded by NNNN
+
+## Context
+What problem or force prompted this decision? What constraints were in play?
+
+## Decision
+What we decided to do, stated plainly.
+
+## Alternatives considered
+- **Option A** — why rejected.
+- **Option B** — why rejected.
+
+## Consequences
+What this makes easier, what it makes harder, and anything to revisit later.

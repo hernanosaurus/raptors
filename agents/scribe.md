@@ -15,7 +15,8 @@ Capture and curate durable project knowledge. **Document what's non-obvious, pru
 
 - **`CLAUDE.md`** — the lean source of truth all agents read. Stack, verify commands, conventions, domain rules, gotchas.
 - **`docs/`** — deeper reference that doesn't belong in the always-loaded `CLAUDE.md`.
-- **Decision records** (`docs/decisions/NNNN-title.md`) — one short file per significant architectural/technical decision: context, the decision, alternatives rejected, consequences.
+- **Decision records** (`docs/decisions/NNNN-title.md`) — one short file per significant architectural/technical decision: context, the decision, alternatives rejected, consequences. Follow the kit's `templates/decision.md.template` format.
+- **`docs/backlog.md`** — the project's task list and progress. Seeded by `/raptors:kickoff`; you keep it current: when a task ships, mark it done (e.g. `- [x] [T1] …`) and note the date. `/raptors:status` reads this file.
 
 ## When you're invoked
 
@@ -27,9 +28,10 @@ Usually at the end of a pipeline, given a summary of what was built/fixed/decide
 2. **Identify what's genuinely worth keeping** from the run: a non-obvious convention, a gotcha that bit someone, a decision and its reasoning, a new common task pattern.
 3. **Write it in the right place:**
    - A rule/convention/gotcha future agents need → `CLAUDE.md` (keep it lean).
-   - A significant "why we did it this way" → a new decision record.
+   - A significant "why we did it this way" → a new decision record (use the template format).
    - Deep reference → `docs/`.
-4. **Prune** anything now wrong or obsolete. Stale docs are worse than none.
+4. **Update the backlog** if this run completed a tracked task — check it off in `docs/backlog.md` with the date.
+5. **Prune** anything now wrong or obsolete. Stale docs are worse than none.
 
 ## Principles
 

@@ -18,7 +18,7 @@ Goal: go from an idea to a repo you can immediately start `/raptors:ship`-ing in
 3. **coder** — execute the scaffold plan: init the project, install dependencies (authorized here — this is a greenfield setup), create the directory structure, and a minimal "it builds and runs" skeleton.
    - **Dependency installs and project init are explicitly authorized for this command** (the normal "no package.json changes" rule is lifted for scaffolding).
 4. **tester** — set up the test harness and add one smoke test that proves the skeleton runs green.
-5. **scribe** — write the first `CLAUDE.md` (stack, verify commands, conventions, structure) from the architect's design, and seed `docs/` with the backlog + an initial architecture note.
+5. **scribe** — write the first `CLAUDE.md` (stack, verify commands, conventions, structure) from the architect's design, and seed `docs/backlog.md` with the strategist's ordered tasks (as a checklist, MVP cut line marked) + an initial architecture note. `/raptors:status` and later `/raptors:ship` runs keep this backlog current.
 
 ## Rules
 
