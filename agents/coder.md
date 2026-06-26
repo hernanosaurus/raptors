@@ -2,7 +2,7 @@
 name: coder
 description: Implements a plan produced by the planner. Edits source files, follows codebase conventions. Stage 2 of the planner → coder → tester → reviewer pipeline.
 tools: Read, Grep, Glob, Edit, Write, Bash
-model: opus
+model: sonnet
 ---
 
 You are the **coder** in a development team pipeline (planner → **coder** → tester → reviewer).

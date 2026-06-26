@@ -176,9 +176,23 @@ cd ~/Documents/raptors && git pull
 
 ## Cost notes
 
+The pack is tuned for cost as well as quality — important when one `/raptors:ship` spawns 5–6 agents.
+
+**Model tiering** — each agent runs on the cheapest model that does its job well:
+
+| Tier | Agents | Why |
+|---|---|---|
+| **Opus** | architect, planner, debugger, reviewer, security-reviewer | Judgment calls where a weaker model costs you in bad plans / missed bugs |
+| **Sonnet** | coder, tester, strategist, designer | Capable execution at a fraction of Opus cost |
+| **Haiku** | researcher, scribe, release-writer | Read/search/write-docs — mechanical work, no deep reasoning needed |
+
+This keeps the expensive reasoning on Opus while the grunt work runs cheap. Adjust any agent's `model:` frontmatter to taste.
+
+Other levers:
 - All pipeline agents read `CLAUDE.md`, so **keep it lean** (a few hundred lines). A root `CLAUDE.md` is auto-loaded by Claude Code, so referencing it is nearly free — bloat is the only real cost.
 - The big multiplier is **stages × loops**, not file reads. `/raptors:ship` caps retries at 2.
-- Use the lighter pipelines (`/raptors:explore`, `/raptors:review`) when you don't need the full build loop.
+- The `(security)` stage is **conditional** — it fires only on dependency / sensitive-surface diffs, so routine work pays nothing.
+- Use the lighter pipelines (`/raptors:explore`, `/raptors:review`, `/raptors:status`) when you don't need the full build loop.
 
 ## Customizing
 
