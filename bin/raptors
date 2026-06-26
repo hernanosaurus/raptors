@@ -11,6 +11,12 @@
 #   raptors where             Print the pack's source location
 #   raptors help              Show this help
 #
+# Flags (for install/link/update):
+#   --dry-run                 Show what would change (add/overwrite/skip) without writing
+#
+# Safety: any existing file that would be overwritten is first backed up to
+# <name>.bak so a repo's own agents/commands are never silently lost.
+#
 set -euo pipefail
 
 # Resolve the pack root from this script's real location (handles symlinks).
@@ -27,15 +33,40 @@ AGENTS=("strategist" "researcher" "architect" "planner" "designer" "coder" \
 # Pack commands live in commands/raptors/ → invoked as /raptors:ship etc.
 COMMANDS=("ship" "fix" "triage" "review" "explore" "onboard" "debt" "audit" "release")
 
-usage() { sed -n '3,13p' "$0" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '3,19p' "$0" | sed 's/^# \{0,1\}//'; }
+
+DRY_RUN=0
+N_ADD=0; N_OVER=0; N_SKIP=0
 
 place() { # $1=src file, $2=dest file, $3=copy|link
-  if [ "$3" = link ]; then ln -sf "$1" "$2"; else cp "$1" "$2"; fi
+  local src="$1" dst="$2" mode="$3" rel="${2#"$DEST_ROOT"/}"
+
+  # Determine the action for reporting.
+  if [ -e "$dst" ] || [ -L "$dst" ]; then
+    # A raptors-owned file (identical content, or an existing symlink to our kit)
+    # is just a refresh, not a clobber of someone else's work.
+    if [ "$mode" = link ] && [ -L "$dst" ]; then
+      echo "  refresh   $rel"; [ "$DRY_RUN" = 1 ] && return; ln -sf "$src" "$dst"; return
+    fi
+    if [ "$mode" = copy ] && cmp -s "$src" "$dst"; then
+      echo "  unchanged $rel"; return
+    fi
+    # Genuine overwrite of a different existing file → back it up first.
+    echo "  OVERWRITE $rel  (existing → $rel.bak)"; N_OVER=$((N_OVER+1))
+    [ "$DRY_RUN" = 1 ] && return
+    cp -p "$dst" "$dst.bak" 2>/dev/null || mv "$dst" "$dst.bak"
+  else
+    echo "  add       $rel"; N_ADD=$((N_ADD+1))
+    [ "$DRY_RUN" = 1 ] && return
+  fi
+
+  if [ "$mode" = link ]; then ln -sf "$src" "$dst"; else cp "$src" "$dst"; fi
 }
 
 copy_kit() { # $1=dest .claude dir, $2=copy|link
   local dest="$1" mode="$2"
-  mkdir -p "$dest/agents" "$dest/commands/raptors"
+  DEST_ROOT="$dest"
+  [ "$DRY_RUN" = 1 ] || mkdir -p "$dest/agents" "$dest/commands/raptors"
   # agents are flat
   for f in "$KIT_DIR"/agents/*.md; do [ -e "$f" ] || continue
     place "$f" "$dest/agents/$(basename "$f")" "$mode"; done
@@ -44,28 +75,46 @@ copy_kit() { # $1=dest .claude dir, $2=copy|link
     place "$f" "$dest/commands/raptors/$(basename "$f")" "$mode"; done
   # flat bootstrap command (/raptor-install)
   place "$KIT_DIR/commands/raptor-install.md" "$dest/commands/raptor-install.md" "$mode"
+
+  echo ""
+  if [ "$DRY_RUN" = 1 ]; then
+    echo "Dry run — nothing written. Would overwrite $N_OVER, add $N_ADD file(s)."
+    [ "$N_OVER" -gt 0 ] && echo "Run without --dry-run to proceed (overwritten files are backed up to .bak)."
+  else
+    echo "Wrote: $N_ADD added, $N_OVER overwritten (backups saved as .bak)."
+  fi
 }
 
+# Parse: subcommand, optional --dry-run anywhere, optional target dir.
 cmd="${1:-help}"; shift || true
-target="${1:-$(pwd)}"
+target=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dry-run) DRY_RUN=1; shift ;;
+    *) target="$1"; shift ;;
+  esac
+done
+target="${target:-$(pwd)}"
+DEST_ROOT=""
 
 case "$cmd" in
   install)
+    echo "Releasing the raptors into $target/.claude (copy):"
     copy_kit "$target/.claude" copy
-    echo "Released the raptors into $target/.claude (copy)."
+    [ "$DRY_RUN" = 1 ] && exit 0
     [ -f "$target/CLAUDE.md" ] || {
       echo ""
       echo "No CLAUDE.md in $target. Give the pack project context:"
       echo "  cp \"$KIT_DIR/templates/CLAUDE.md.template\" \"$target/CLAUDE.md\""; }
     ;;
   link)
+    echo "Linking the raptors into $target/.claude (symlinks):"
     copy_kit "$target/.claude" link
-    echo "Linked the raptors into $target/.claude (symlinks — pack edits propagate)."
     ;;
   update)
     [ -d "$target/.claude" ] || { echo "No .claude in $target. Run: raptors install"; exit 1; }
+    echo "Updating the raptors in $target/.claude:"
     copy_kit "$target/.claude" copy
-    echo "Updated the raptors in $target/.claude."
     ;;
   global)
     mkdir -p "$HOME/.claude/commands"

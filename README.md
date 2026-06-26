@@ -91,13 +91,30 @@ Two equivalent ways — pick whichever fits the moment:
 **From the terminal (the `raptors` command):**
 ```bash
 cd /path/to/project
-raptors install .         # copy agents+commands into ./.claude
-raptors link .            # OR symlink them (pack edits auto-propagate)
-raptors update .          # re-copy latest pack files after you pull updates
-raptors remove .          # recall the pack (leaves CLAUDE.md alone)
-raptors where             # print the pack's source path
-raptors help              # all subcommands
+raptors install .           # copy agents+commands into ./.claude
+raptors install . --dry-run # preview what would change — writes nothing
+raptors link .              # OR symlink them (pack edits auto-propagate)
+raptors update .            # re-copy latest pack files after you pull updates
+raptors remove .            # recall the pack (leaves CLAUDE.md and .bak files alone)
+raptors where               # print the pack's source path
+raptors help                # all subcommands
 ```
+
+**Safe to run on a repo that already has a `.claude/`.** The installer only writes
+the files it owns; your other agents/commands are untouched. If a name *does* collide
+(e.g. the repo already has its own `agents/planner.md`), the installer **backs up the
+existing file to `<name>.bak` before overwriting** — nothing is silently lost. Use
+`--dry-run` first to see exactly what would be added vs. overwritten:
+
+```
+raptors install . --dry-run
+  unchanged agents/coder.md
+  OVERWRITE agents/planner.md  (existing → agents/planner.md.bak)
+  add       commands/raptors/ship.md
+  Dry run — nothing written. Would overwrite 1, add 1 file(s).
+```
+
+To restore an original after an overwrite: `mv agents/planner.md.bak agents/planner.md`.
 
 **From inside a Claude session in that project:**
 ```
