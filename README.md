@@ -18,7 +18,7 @@ ship clean changes.
 
 Agents never hard-code a stack. They read `CLAUDE.md` (and `docs/`) at runtime and
 match local conventions. To use the pack on a new project you write one `CLAUDE.md`,
-not seven agents.
+not a dozen agents.
 
 ## The pack (agents)
 
