@@ -3,7 +3,7 @@ description: Run a feature/bug task through the full team pipeline â€” planner â
 argument-hint: <task description, or a ticket id / link>
 ---
 
-You are orchestrating the **/ship** pipeline for this task:
+You are orchestrating the **/raptors:ship** pipeline for this task:
 
 > $ARGUMENTS
 
@@ -39,7 +39,7 @@ Run the four-agent pipeline end to end. Use the Agent tool to invoke each stage;
 When the reviewer returns `APPROVE` (or you stop early), summarize for the user:
 
 ```
-## /ship result: <SHIPPED / BLOCKED at <stage>>
+## /raptors:ship result: <SHIPPED / BLOCKED at <stage>>
 
 **Task:** one line.
 **Files changed:** list from the coder.

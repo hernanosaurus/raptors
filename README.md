@@ -39,27 +39,34 @@ not seven agents.
 
 ## Pipelines (commands)
 
+All pack commands are namespaced under `raptors:` (they live in `commands/raptors/`),
+so they never collide with Claude Code's built-ins or other plugins. Type `/raptors`
+and autocomplete shows the whole pack.
+
 | Command | Chain | Output |
 |---|---|---|
-| **/ship** `<task>` | (architect) → planner → (designer) → coder → tester → reviewer → scribe | Working, tested, reviewed change + captured knowledge |
-| **/fix** `<bug>` | debugger → planner → coder → tester → reviewer → scribe | Root-caused fix + regression test + lesson recorded |
-| **/triage** `<idea>` | strategist → planner | A ready-to-ship scoped task (no code) |
-| **/review** `[base/PR]` | (tester) → reviewer | Verdict on a diff |
-| **/explore** `<question>` | researcher(s) | A cited map of the codebase |
-| **/onboard** `[area]` | researcher(s) → scribe | Project mental model, persisted to CLAUDE.md |
-| **/debt** `[area]` | researcher + reviewer → (ship per item) → scribe | Prioritized debt, paid down safely with consent |
-| **/audit** `[scope]` | security-reviewer → (ship per fix) → re-audit → scribe | Ranked vulns, remediated with consent |
-| **/release** `[base/PR/range]` | release-writer | PR description / changelog / release notes |
-| **/install-raptors** | — | Releases the pack into the current repo (user-level command) |
+| **/raptors:ship** `<task>` | (architect) → planner → (designer) → coder → tester → reviewer → scribe | Working, tested, reviewed change + captured knowledge |
+| **/raptors:fix** `<bug>` | debugger → planner → coder → tester → reviewer → scribe | Root-caused fix + regression test + lesson recorded |
+| **/raptors:triage** `<idea>` | strategist → planner | A ready-to-ship scoped task (no code) |
+| **/raptors:review** `[base/PR]` | (tester) → reviewer | Verdict on a diff |
+| **/raptors:explore** `<question>` | researcher(s) | A cited map of the codebase |
+| **/raptors:onboard** `[area]` | researcher(s) → scribe | Project mental model, persisted to CLAUDE.md |
+| **/raptors:debt** `[area]` | researcher + reviewer → (ship per item) → scribe | Prioritized debt, paid down safely with consent |
+| **/raptors:audit** `[scope]` | security-reviewer → (ship per fix) → re-audit → scribe | Ranked vulns, remediated with consent |
+| **/raptors:release** `[base/PR/range]` | release-writer | PR description / changelog / release notes |
+| **/raptor-install** | — | Bootstrap: releases the pack into the current repo (flat, always-available) |
+
+> The bootstrap command is intentionally flat (`/raptor-install`, not `/raptors:install`)
+> so it's available *before* the pack is installed in a repo — no chicken-and-egg.
 
 ### The 6-month lifecycle
 
 The pack is built for a project you live with, not just a one-off task:
 
-- **Arrive:** `/onboard` a cold repo → warm `CLAUDE.md` for everyone after you.
-- **Build:** `/triage` to scope → `/ship` to build (the scribe captures what's learned each time).
-- **Maintain:** `/fix` bugs with reproduction-first discipline; `/debt` to clean up safely; `/audit` to keep deps/security healthy.
-- **Deliver:** `/review` before merge; `/release` for PR text and changelogs.
+- **Arrive:** `/raptors:onboard` a cold repo → warm `CLAUDE.md` for everyone after you.
+- **Build:** `/raptors:triage` to scope → `/raptors:ship` to build (the scribe captures what's learned each time).
+- **Maintain:** `/raptors:fix` bugs with reproduction-first discipline; `/raptors:debt` to clean up safely; `/raptors:audit` to keep deps/security healthy.
+- **Deliver:** `/raptors:review` before merge; `/raptors:release` for PR text and changelogs.
 
 The thread that makes it compound: **the scribe writes down what the team learns**, so month 6 isn't day-one for the 180th time.
 
@@ -70,11 +77,11 @@ The thread that makes it compound: **the scribe writes down what the team learns
 ```bash
 git clone <your-repo-url> ~/Documents/raptors
 cd ~/Documents/raptors
-./bootstrap.sh          # adds `raptors` to PATH + installs the /install-raptors command
+./bootstrap.sh          # adds `raptors` to PATH + installs the /raptor-install command
 ```
 
 Open a new terminal (or `source ~/.zshrc`). The `raptors` CLI and the
-`/install-raptors` slash command are now available everywhere — but the pack is
+`/raptor-install` slash command are now available everywhere — but the pack is
 released into a repo **only when you ask**.
 
 ## Release the pack into a repo
@@ -94,8 +101,8 @@ raptors help              # all subcommands
 
 **From inside a Claude session in that project:**
 ```
-/install-raptors            # copy
-/install-raptors --link     # symlink
+/raptor-install            # copy
+/raptor-install --link     # symlink
 ```
 
 Then give the pack context:
@@ -103,21 +110,21 @@ Then give the pack context:
 cp ~/Documents/raptors/templates/CLAUDE.md.template /path/to/project/CLAUDE.md
 # edit it: stack, verify commands, conventions, domain rules
 ```
-(`/install-raptors` will offer to create and fill this in for you.)
+(`/raptor-install` will offer to create and fill this in for you.)
 
 ## Using the raptors
 
 Inside a project that has the pack installed and a `CLAUDE.md`:
 
 ```
-/explore how does authentication work
-/triage add a "remember me" checkbox to the login form
-/ship   fix the off-by-one in pagination on the orders page
-/review                         # reviews the working-tree diff
-/review 42                      # reviews PR #42
+/raptors:explore how does authentication work
+/raptors:triage  add a "remember me" checkbox to the login form
+/raptors:ship    fix the off-by-one in pagination on the orders page
+/raptors:review                 # reviews the working-tree diff
+/raptors:review 42              # reviews PR #42
 ```
 
-`/ship` runs all four core stages with autonomous handoff and stops only when an
+`/raptors:ship` runs all core stages with autonomous handoff and stops only when an
 agent needs a human decision. Retry loops (tester→coder, reviewer→coder) are
 capped at 2 to bound cost.
 
@@ -143,12 +150,12 @@ cd ~/Documents/raptors && git pull
 ## Cost notes
 
 - All pipeline agents read `CLAUDE.md`, so **keep it lean** (a few hundred lines). A root `CLAUDE.md` is auto-loaded by Claude Code, so referencing it is nearly free — bloat is the only real cost.
-- The big multiplier is **stages × loops**, not file reads. `/ship` caps retries at 2.
-- Use the lighter pipelines (`/explore`, `/review`) when you don't need the full build loop.
+- The big multiplier is **stages × loops**, not file reads. `/raptors:ship` caps retries at 2.
+- Use the lighter pipelines (`/raptors:explore`, `/raptors:review`) when you don't need the full build loop.
 
 ## Customizing
 
-- **Drop a raptor:** delete its `agents/*.md` and remove it from the relevant command. Core 4 (planner, coder, tester, reviewer) is the `/ship` minimum.
+- **Drop a raptor:** delete its `agents/*.md` and remove it from the relevant command. Core 4 (planner, coder, tester, reviewer) is the `/raptors:ship` minimum.
 - **Change a model:** edit the `model:` field in an agent's frontmatter.
 - **Add a pipeline:** new `commands/*.md` that orchestrates existing agents.
 
@@ -157,11 +164,13 @@ cd ~/Documents/raptors && git pull
 ```
 raptors/
 ├── README.md
-├── bootstrap.sh              one-time per-machine setup (PATH + global command)
-├── install.sh               low-level installer (bootstrap/raptors wrap this)
-├── bin/raptors              the CLI you run from any terminal
-├── agents/                  the 7 raptors
-├── commands/                the pipelines + /install-raptors
+├── bootstrap.sh                 one-time per-machine setup (PATH + bootstrap command)
+├── install.sh                   thin wrapper around bin/raptors
+├── bin/raptors                  the CLI you run from any terminal
+├── agents/                      the 12 raptors (flat, role-named)
+├── commands/
+│   ├── raptors/                 the pipelines → /raptors:<name>
+│   └── raptor-install.md        flat bootstrap → /raptor-install
 └── templates/
-    └── CLAUDE.md.template   per-project context glue
+    └── CLAUDE.md.template       per-project context glue
 ```

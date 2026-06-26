@@ -6,7 +6,7 @@
 #   raptors install [dir]     Install agents+commands into <dir>/.claude (default: cwd)
 #   raptors link    [dir]     Same, but symlink (pack edits propagate to the project)
 #   raptors update  [dir]     Re-copy the latest pack files into <dir>/.claude
-#   raptors global            Install the /install-raptors slash command at ~/.claude
+#   raptors global            Install the /raptor-install slash command at ~/.claude
 #   raptors remove  [dir]     Remove the pack's agents+commands from <dir>/.claude
 #   raptors where             Print the pack's source location
 #   raptors help              Show this help
@@ -24,19 +24,26 @@ KIT_DIR="$(cd -P "$(dirname "$SOURCE")/.." && pwd)"
 
 AGENTS=("strategist" "researcher" "architect" "planner" "designer" "coder" \
         "tester" "reviewer" "debugger" "security-reviewer" "scribe" "release-writer")
+# Pack commands live in commands/raptors/ → invoked as /raptors:ship etc.
 COMMANDS=("ship" "fix" "triage" "review" "explore" "onboard" "debt" "audit" "release")
 
 usage() { sed -n '3,13p' "$0" | sed 's/^# \{0,1\}//'; }
 
+place() { # $1=src file, $2=dest file, $3=copy|link
+  if [ "$3" = link ]; then ln -sf "$1" "$2"; else cp "$1" "$2"; fi
+}
+
 copy_kit() { # $1=dest .claude dir, $2=copy|link
   local dest="$1" mode="$2"
-  mkdir -p "$dest/agents" "$dest/commands"
-  for f in "$KIT_DIR"/agents/*.md;   do [ -e "$f" ] || continue
-    if [ "$mode" = link ]; then ln -sf "$f" "$dest/agents/$(basename "$f")"
-    else cp "$f" "$dest/agents/"; fi; done
-  for f in "$KIT_DIR"/commands/*.md; do [ -e "$f" ] || continue
-    if [ "$mode" = link ]; then ln -sf "$f" "$dest/commands/$(basename "$f")"
-    else cp "$f" "$dest/commands/"; fi; done
+  mkdir -p "$dest/agents" "$dest/commands/raptors"
+  # agents are flat
+  for f in "$KIT_DIR"/agents/*.md; do [ -e "$f" ] || continue
+    place "$f" "$dest/agents/$(basename "$f")" "$mode"; done
+  # pack commands keep the raptors/ subdir so they namespace as /raptors:<name>
+  for f in "$KIT_DIR"/commands/raptors/*.md; do [ -e "$f" ] || continue
+    place "$f" "$dest/commands/raptors/$(basename "$f")" "$mode"; done
+  # flat bootstrap command (/raptor-install)
+  place "$KIT_DIR/commands/raptor-install.md" "$dest/commands/raptor-install.md" "$mode"
 }
 
 cmd="${1:-help}"; shift || true
@@ -62,13 +69,15 @@ case "$cmd" in
     ;;
   global)
     mkdir -p "$HOME/.claude/commands"
-    cp "$KIT_DIR/commands/install-raptors.md" "$HOME/.claude/commands/install-raptors.md"
-    echo "Installed /install-raptors slash command at ~/.claude/commands."
+    cp "$KIT_DIR/commands/raptor-install.md" "$HOME/.claude/commands/raptor-install.md"
+    echo "Installed /raptor-install slash command at ~/.claude/commands."
     echo "It is now available in every Claude session, but only acts when you run it."
     ;;
   remove)
     for a in "${AGENTS[@]}";   do rm -f "$target/.claude/agents/$a.md"; done
-    for c in "${COMMANDS[@]}"; do rm -f "$target/.claude/commands/$c.md"; done
+    for c in "${COMMANDS[@]}"; do rm -f "$target/.claude/commands/raptors/$c.md"; done
+    rmdir "$target/.claude/commands/raptors" 2>/dev/null || true
+    rm -f "$target/.claude/commands/raptor-install.md"
     echo "Recalled the raptors from $target/.claude (CLAUDE.md left untouched)."
     ;;
   where) echo "$KIT_DIR" ;;

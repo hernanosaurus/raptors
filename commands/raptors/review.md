@@ -3,7 +3,7 @@ description: Run the reviewer (and optionally the tester) on the current diff or
 argument-hint: [optional: base branch, PR number, or "staged"]
 ---
 
-You are orchestrating the **/review** pipeline.
+You are orchestrating the **/raptors:review** pipeline.
 
 Target: $ARGUMENTS — if empty, review the working-tree diff against the default branch. If a base branch, PR number, or "staged" is given, scope the diff to that.
 
@@ -21,4 +21,4 @@ Target: $ARGUMENTS — if empty, review the working-tree diff against the defaul
 ## Final report
 
 Relay the reviewer's verdict, blocking issues, and nits verbatim-ish, plus a one-line recommendation:
-*APPROVE → "ready to merge"* or *REQUEST_CHANGES → "fix blocking issues, then re-review (or run `/ship` to apply fixes)."*
+*APPROVE → "ready to merge"* or *REQUEST_CHANGES → "fix blocking issues, then re-review (or run `/raptors:ship` to apply fixes)."*

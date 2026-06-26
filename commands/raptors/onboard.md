@@ -3,7 +3,7 @@ description: Re-enter a cold or unfamiliar project — map the architecture, how
 argument-hint: [optional: an area to focus on, e.g. "the billing module"]
 ---
 
-You are orchestrating the **/onboard** pipeline. Focus: $ARGUMENTS (whole project if empty).
+You are orchestrating the **/raptors:onboard** pipeline. Focus: $ARGUMENTS (whole project if empty).
 
 Goal: produce a clear mental model of this project AND persist it so future runs (and future you) start warm. Delegate via the Agent tool.
 
@@ -25,11 +25,11 @@ Goal: produce a clear mental model of this project AND persist it so future runs
 ## Final report
 
 ```
-## /onboard: <project>
+## /raptors:onboard: <project>
 **What it is:** ...
 **Run / build / test:** the commands.
 **Architecture:** subsystems + `path` refs.
 **Risky / surprising:** ...
 **Captured to:** CLAUDE.md (+ docs/ if seeded).
-**Next:** "run `/explore` to go deeper, or `/triage` to scope a change."
+**Next:** "run `/raptors:explore` to go deeper, or `/raptors:triage` to scope a change."
 ```

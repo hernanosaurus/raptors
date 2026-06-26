@@ -3,7 +3,7 @@ description: Fix a bug the right way — investigate and reproduce the root caus
 argument-hint: <bug description, error message, or steps to reproduce>
 ---
 
-You are orchestrating the **/fix** pipeline for:
+You are orchestrating the **/raptors:fix** pipeline for:
 
 > $ARGUMENTS
 
@@ -31,7 +31,7 @@ A fix without a confirmed root cause is a guess. This pipeline diagnoses before 
 ## Final report
 
 ```
-## /fix result: <FIXED / BLOCKED at <stage>>
+## /raptors:fix result: <FIXED / BLOCKED at <stage>>
 **Bug:** one line.
 **Root cause:** from the debugger (`path:line`).
 **Fix:** what changed (files).

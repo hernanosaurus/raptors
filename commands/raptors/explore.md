@@ -3,7 +3,7 @@ description: Read-only codebase recon — the researcher maps a feature or subsy
 argument-hint: <what to investigate, e.g. "how does auth work" or "where are payments handled">
 ---
 
-You are orchestrating the **/explore** pipeline for:
+You are orchestrating the **/raptors:explore** pipeline for:
 
 > $ARGUMENTS
 
@@ -28,4 +28,4 @@ Synthesize the researcher output into:
 **Gotchas:** ...
 **Open questions:** ...
 ```
-End by offering next steps: *"Run `/triage` to scope a change here, or `/ship` to build one."*
+End by offering next steps: *"Run `/raptors:triage` to scope a change here, or `/raptors:ship` to build one."*

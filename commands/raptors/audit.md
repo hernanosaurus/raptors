@@ -3,7 +3,7 @@ description: Security and dependency health check — scan the code and dependen
 argument-hint: [optional: a scope, e.g. "the auth module" or "dependencies only"]
 ---
 
-You are orchestrating the **/audit** pipeline. Scope: $ARGUMENTS (whole project if empty).
+You are orchestrating the **/raptors:audit** pipeline. Scope: $ARGUMENTS (whole project if empty).
 
 Goal: surface security risk in a long-lived codebase before it's exploited, and remediate safely with consent. Delegate via the Agent tool.
 
@@ -25,7 +25,7 @@ Goal: surface security risk in a long-lived codebase before it's exploited, and 
 ## Final report
 
 ```
-## /audit result
+## /raptors:audit result
 **Scope:** ...
 **Findings:** by severity, with path refs and advisory IDs.
 **Remediated (approved):** what changed + re-audit confirmation.

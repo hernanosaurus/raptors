@@ -22,7 +22,7 @@ After installing:
 2. If there is **no `CLAUDE.md`** in the project root, offer to create one from the template
    (`$KIT/templates/CLAUDE.md.template`) and, if the user agrees, fill it in by inspecting
    the repo's actual stack (package manager, framework, test runner, conventions). Keep it lean.
-3. Tell the user the pack is ready and they can run `/ship`, `/triage`, `/review`, or `/explore`.
+3. Tell the user the pack is ready and they can run `/raptors:ship`, `/raptors:triage`, `/raptors:review`, or `/raptors:explore`.
 
 If `raptors` is not on PATH, fall back to calling the pack's installer directly:
 `bash "$HOME/Documents/raptors/install.sh" "$(pwd)"`.

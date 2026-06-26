@@ -3,7 +3,7 @@ description: Prepare delivery artifacts for a change or version — PR descripti
 argument-hint: [optional: base branch, PR number, or version range like v1.2.0..HEAD]
 ---
 
-You are orchestrating the **/release** pipeline.
+You are orchestrating the **/raptors:release** pipeline.
 
 Target: $ARGUMENTS — if empty, describe the working-tree diff against the default branch. A PR number → that PR. A version/commit range → release notes for that range.
 

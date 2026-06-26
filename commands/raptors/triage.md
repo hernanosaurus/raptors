@@ -3,7 +3,7 @@ description: Turn a raw idea, bug report, or feature request into a scoped, read
 argument-hint: <raw idea / bug report / feature request / ticket link>
 ---
 
-You are orchestrating the **/triage** pipeline for:
+You are orchestrating the **/raptors:triage** pipeline for:
 
 > $ARGUMENTS
 
@@ -24,11 +24,11 @@ The goal is a **buildable task**, not code. Delegate via the Agent tool.
 ## Final report
 
 ```
-## /triage result
+## /raptors:triage result
 
 **Scoped task** (from strategist): goal, in/out scope, acceptance criteria.
 **Proposed approach** (from planner): summary, affected files, key steps, risks.
-**Ready to ship?** yes → "run `/ship` with this task" | no → open questions for the user.
+**Ready to ship?** yes → "run `/raptors:ship` with this task" | no → open questions for the user.
 ```
 
-If ready, end by offering: *"Run `/ship` to build this."*
+If ready, end by offering: *"Run `/raptors:ship` to build this."*
