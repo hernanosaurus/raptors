@@ -9,6 +9,7 @@
 #   raptors global            Install the /raptor-install slash command at ~/.claude
 #   raptors remove  [dir]     Remove the pack's agents+commands from <dir>/.claude
 #   raptors where             Print the pack's source location
+#   raptors check             Verify kit invariants (disk files ↔ AGENTS/COMMANDS arrays)
 #   raptors help              Show this help
 #
 # Flags (for install/link/update):
@@ -130,6 +131,30 @@ case "$cmd" in
     echo "Recalled the raptors from $target/.claude (CLAUDE.md left untouched)."
     ;;
   where) echo "$KIT_DIR" ;;
+  check)
+    fail=0
+    # Agents on disk must match AGENTS array.
+    for f in "$KIT_DIR"/agents/*.md; do n="$(basename "$f" .md)"
+      [[ " ${AGENTS[*]} " == *" $n "* ]] || { echo "MISSING from AGENTS array: $n"; fail=1; }
+    done
+    for n in "${AGENTS[@]}"; do
+      [ -f "$KIT_DIR/agents/$n.md" ] || { echo "AGENTS array lists nonexistent agent: $n"; fail=1; }
+    done
+    # Pack commands on disk must match COMMANDS array.
+    for f in "$KIT_DIR"/commands/raptors/*.md; do n="$(basename "$f" .md)"
+      [[ " ${COMMANDS[*]} " == *" $n "* ]] || { echo "MISSING from COMMANDS array: $n"; fail=1; }
+    done
+    for n in "${COMMANDS[@]}"; do
+      [ -f "$KIT_DIR/commands/raptors/$n.md" ] || { echo "COMMANDS array lists nonexistent command: $n"; fail=1; }
+    done
+    # The flat bootstrap command must exist.
+    [ -f "$KIT_DIR/commands/raptor-install.md" ] || { echo "MISSING: commands/raptor-install.md"; fail=1; }
+    if [ "$fail" = 0 ]; then
+      echo "OK — ${#AGENTS[@]} agents, ${#COMMANDS[@]} commands, all in sync."
+    else
+      echo "Invariant check FAILED. Fix the above before committing."; exit 1
+    fi
+    ;;
   help|--help|-h) usage ;;
   *) echo "Unknown command: $cmd"; echo; usage; exit 1 ;;
 esac

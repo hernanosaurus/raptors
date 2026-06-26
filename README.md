@@ -198,7 +198,8 @@ Other levers:
 
 - **Drop a raptor:** delete its `agents/*.md` and remove it from the relevant command. Core 4 (planner, coder, tester, reviewer) is the `/raptors:ship` minimum.
 - **Change a model:** edit the `model:` field in an agent's frontmatter.
-- **Add a pipeline:** new `commands/*.md` that orchestrates existing agents.
+- **Add a pipeline:** new `commands/raptors/*.md` that orchestrates existing agents.
+- **After any add/remove:** run `raptors check` to verify the files and the CLI's `AGENTS`/`COMMANDS` arrays are in sync (this is what keeps `raptors remove` correct). Maintainer guidance lives in [CLAUDE.md](CLAUDE.md).
 
 ## Layout
 
