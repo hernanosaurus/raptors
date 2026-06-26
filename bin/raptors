@@ -22,8 +22,9 @@ while [ -h "$SOURCE" ]; do
 done
 KIT_DIR="$(cd -P "$(dirname "$SOURCE")/.." && pwd)"
 
-AGENTS=("strategist" "researcher" "planner" "designer" "coder" "tester" "reviewer")
-COMMANDS=("ship" "triage" "review" "explore")
+AGENTS=("strategist" "researcher" "architect" "planner" "designer" "coder" \
+        "tester" "reviewer" "debugger" "security-reviewer" "scribe" "release-writer")
+COMMANDS=("ship" "fix" "triage" "review" "explore" "onboard" "debt" "audit" "release")
 
 usage() { sed -n '3,13p' "$0" | sed 's/^# \{0,1\}//'; }
 

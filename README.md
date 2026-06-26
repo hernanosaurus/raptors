@@ -25,24 +25,43 @@ not seven agents.
 | Raptor | Job | Edits code? |
 |---|---|---|
 | **strategist** | Vague idea → scoped requirements + acceptance criteria | No |
+| **architect** | Cross-cutting / structural design + phasing (above the planner) | No |
 | **researcher** | Read-only codebase recon, cited findings | No |
 | **planner** | Scoped task → concrete step-by-step plan | No |
 | **designer** *(optional)* | UI/UX spec before coding (frontend work) | No |
 | **coder** | Execute the plan → working code | Yes |
 | **tester** | Write tests, get the suite green | Tests only |
 | **reviewer** | Judge the diff → APPROVE / REQUEST_CHANGES | No |
+| **debugger** | Reproduce + root-cause a bug before any fix | No |
+| **security-reviewer** | Vulnerability + dependency audit, ranked by severity | No |
+| **scribe** | Maintains CLAUDE.md / docs / decision records — the team's memory | Docs only |
+| **release-writer** | PR descriptions, changelogs, release notes from a diff | No |
 
 ## Pipelines (commands)
 
 | Command | Chain | Output |
 |---|---|---|
-| **/ship** `<task>` | planner → coder → tester → reviewer | Working, tested, reviewed change |
+| **/ship** `<task>` | (architect) → planner → (designer) → coder → tester → reviewer → scribe | Working, tested, reviewed change + captured knowledge |
+| **/fix** `<bug>` | debugger → planner → coder → tester → reviewer → scribe | Root-caused fix + regression test + lesson recorded |
 | **/triage** `<idea>` | strategist → planner | A ready-to-ship scoped task (no code) |
 | **/review** `[base/PR]` | (tester) → reviewer | Verdict on a diff |
 | **/explore** `<question>` | researcher(s) | A cited map of the codebase |
+| **/onboard** `[area]` | researcher(s) → scribe | Project mental model, persisted to CLAUDE.md |
+| **/debt** `[area]` | researcher + reviewer → (ship per item) → scribe | Prioritized debt, paid down safely with consent |
+| **/audit** `[scope]` | security-reviewer → (ship per fix) → re-audit → scribe | Ranked vulns, remediated with consent |
+| **/release** `[base/PR/range]` | release-writer | PR description / changelog / release notes |
 | **/install-raptors** | — | Releases the pack into the current repo (user-level command) |
 
-Typical flow: `/explore` to learn a repo → `/triage` to scope a change → `/ship` to build it → `/review` on the PR.
+### The 6-month lifecycle
+
+The pack is built for a project you live with, not just a one-off task:
+
+- **Arrive:** `/onboard` a cold repo → warm `CLAUDE.md` for everyone after you.
+- **Build:** `/triage` to scope → `/ship` to build (the scribe captures what's learned each time).
+- **Maintain:** `/fix` bugs with reproduction-first discipline; `/debt` to clean up safely; `/audit` to keep deps/security healthy.
+- **Deliver:** `/review` before merge; `/release` for PR text and changelogs.
+
+The thread that makes it compound: **the scribe writes down what the team learns**, so month 6 isn't day-one for the 180th time.
 
 ---
 
