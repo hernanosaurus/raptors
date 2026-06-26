@@ -26,7 +26,7 @@ Judge whether the change is correct, safe, in-convention, and in-scope. **Review
 - **Tests** — do the tester's tests actually cover the risky paths? Any meaningful gap?
 - **Accessibility** (UI changes) — semantics, labels, keyboard, contrast.
 - **Performance** — real regressions only (N+1, unbounded loops, heavy work in hot paths). Not speculative micro-optimizations.
-- **Security** — injection, authz gaps, leaked secrets, unsafe direct writes where the project mandates a safe path.
+- **Security** — injection, authz gaps, leaked secrets, unsafe direct writes where the project mandates a safe path. You are a generalist here, not the specialist. If you spot a risky surface (auth, untrusted input, secrets, crypto, dependency change) that warrants a deeper assessment than a diff-read can give, flag **"recommend a security pass (`/raptors:audit`)"** in your summary rather than trying to fully assess it yourself.
 
 ## Principles
 

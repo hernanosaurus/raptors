@@ -18,9 +18,15 @@ Run the four-agent pipeline end to end. Use the Agent tool to invoke each stage;
    - If `needs-clarification` or `plan-is-wrong`, send it back to the **planner** once with the coder's `## Why`. If the planner can resolve it, continue; otherwise stop and ask the user.
 3. **tester** — write tests and get the suite green.
    - If `bug-found`, send the bug report back to the **coder** to fix, then re-run the **tester**. Loop at most twice; if still failing, stop and report.
-4. **reviewer** — review the full diff.
+4. **security-reviewer** (CONDITIONAL — token-saving gate). Inspect the diff and invoke the security-reviewer **only if** the change:
+   - touches **dependencies** (`package.json`, lockfiles, or any added/removed package), OR
+   - touches a **sensitive surface** — authentication/authorization, user-input handling, file upload/parsing, secrets/env/credentials, crypto, raw SQL/queries, deserialization, or network fetches with untrusted URLs.
+
+   If neither applies (e.g. a UI tweak, copy change, pure refactor), **skip this stage entirely** — the generalist reviewer's security glance in stage 5 is sufficient. Say in the final report that it was skipped and why.
+   - If invoked and it returns `ISSUES-FOUND`, send the findings (severity-ordered) to the **coder** to remediate, then re-run the **tester** and re-run the **security-reviewer** on the new diff. Loop at most twice.
+5. **reviewer** — review the full diff.
    - If `REQUEST_CHANGES`, send the blocking issues to the **coder**, then re-run the **tester** and **reviewer** on the new diff. Loop at most twice.
-5. **scribe** (knowledge capture) — after `APPROVE`, give the scribe a summary of what was built and any non-obvious decision/gotcha discovered. It records anything durable in `CLAUDE.md`/`docs` so the next run starts warmer. If nothing was learned worth keeping, it returns `nothing-to-capture` — that's fine.
+6. **scribe** (knowledge capture) — after `APPROVE`, give the scribe a summary of what was built and any non-obvious decision/gotcha discovered. It records anything durable in `CLAUDE.md`/`docs` so the next run starts warmer. If nothing was learned worth keeping, it returns `nothing-to-capture` — that's fine.
 
 ## Optional stages
 
@@ -44,6 +50,7 @@ When the reviewer returns `APPROVE` (or you stop early), summarize for the user:
 **Task:** one line.
 **Files changed:** list from the coder.
 **Tests:** what the tester added + suite status.
+**Security:** ran (verdict) / skipped (why — no deps or sensitive surfaces touched).
 **Review:** verdict + any non-blocking issues left for the user.
 **Knowledge captured:** what the scribe recorded, if anything.
 **Next step:** what the user should do (review the diff, commit, etc.).
