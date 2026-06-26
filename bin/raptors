@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+#
+# raptors — manage your pack of AI dev agents (agents + commands) for Claude Code.
+#
+# Subcommands:
+#   raptors install [dir]     Install agents+commands into <dir>/.claude (default: cwd)
+#   raptors link    [dir]     Same, but symlink (pack edits propagate to the project)
+#   raptors update  [dir]     Re-copy the latest pack files into <dir>/.claude
+#   raptors global            Install the /install-raptors slash command at ~/.claude
+#   raptors remove  [dir]     Remove the pack's agents+commands from <dir>/.claude
+#   raptors where             Print the pack's source location
+#   raptors help              Show this help
+#
+set -euo pipefail
+
+# Resolve the pack root from this script's real location (handles symlinks).
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ "$SOURCE" != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+KIT_DIR="$(cd -P "$(dirname "$SOURCE")/.." && pwd)"
+
+AGENTS=("strategist" "researcher" "planner" "designer" "coder" "tester" "reviewer")
+COMMANDS=("ship" "triage" "review" "explore")
+
+usage() { sed -n '3,13p' "$0" | sed 's/^# \{0,1\}//'; }
+
+copy_kit() { # $1=dest .claude dir, $2=copy|link
+  local dest="$1" mode="$2"
+  mkdir -p "$dest/agents" "$dest/commands"
+  for f in "$KIT_DIR"/agents/*.md;   do [ -e "$f" ] || continue
+    if [ "$mode" = link ]; then ln -sf "$f" "$dest/agents/$(basename "$f")"
+    else cp "$f" "$dest/agents/"; fi; done
+  for f in "$KIT_DIR"/commands/*.md; do [ -e "$f" ] || continue
+    if [ "$mode" = link ]; then ln -sf "$f" "$dest/commands/$(basename "$f")"
+    else cp "$f" "$dest/commands/"; fi; done
+}
+
+cmd="${1:-help}"; shift || true
+target="${1:-$(pwd)}"
+
+case "$cmd" in
+  install)
+    copy_kit "$target/.claude" copy
+    echo "Released the raptors into $target/.claude (copy)."
+    [ -f "$target/CLAUDE.md" ] || {
+      echo ""
+      echo "No CLAUDE.md in $target. Give the pack project context:"
+      echo "  cp \"$KIT_DIR/templates/CLAUDE.md.template\" \"$target/CLAUDE.md\""; }
+    ;;
+  link)
+    copy_kit "$target/.claude" link
+    echo "Linked the raptors into $target/.claude (symlinks — pack edits propagate)."
+    ;;
+  update)
+    [ -d "$target/.claude" ] || { echo "No .claude in $target. Run: raptors install"; exit 1; }
+    copy_kit "$target/.claude" copy
+    echo "Updated the raptors in $target/.claude."
+    ;;
+  global)
+    mkdir -p "$HOME/.claude/commands"
+    cp "$KIT_DIR/commands/install-raptors.md" "$HOME/.claude/commands/install-raptors.md"
+    echo "Installed /install-raptors slash command at ~/.claude/commands."
+    echo "It is now available in every Claude session, but only acts when you run it."
+    ;;
+  remove)
+    for a in "${AGENTS[@]}";   do rm -f "$target/.claude/agents/$a.md"; done
+    for c in "${COMMANDS[@]}"; do rm -f "$target/.claude/commands/$c.md"; done
+    echo "Recalled the raptors from $target/.claude (CLAUDE.md left untouched)."
+    ;;
+  where) echo "$KIT_DIR" ;;
+  help|--help|-h) usage ;;
+  *) echo "Unknown command: $cmd"; echo; usage; exit 1 ;;
+esac

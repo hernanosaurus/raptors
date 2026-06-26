@@ -1,0 +1,43 @@
+# <Project name>
+
+> This file is the source of truth for the raptors. Every agent reads it
+> before working. Keep it lean — a few hundred lines max. All four pipeline
+> agents load it, so bloat here costs tokens on every run.
+
+## What this is
+One paragraph: what the product does and who it's for.
+
+## Stack
+- **Language / runtime:** e.g. TypeScript / Node 20
+- **Framework:** e.g. Next.js 14 (App Router) / React 18
+- **UI / component library:** e.g. Ant Design — use `<Button>`, `<Table>`, never raw HTML controls
+- **State:** e.g. Redux Toolkit (slices in `src/store/`)
+- **Data / backend:** e.g. Supabase / REST API at `src/api/`
+- **Tests:** e.g. Jest + React Testing Library
+
+## Verify commands
+The team runs these to check work. Keep names accurate.
+- **Lint:** `npm run lint`
+- **Typecheck:** `npm run typecheck` (or `npx tsc --noEmit`)
+- **Test:** `npm run test`
+- **Build:** `npm run build`
+
+## Conventions
+- **Components:** where they live, how they're named, library-first rule.
+- **Mutations / data fetching:** the one pattern to use (e.g. RTK Query, Server Actions, thunks).
+- **File / folder structure:** where things go.
+- **Naming & style:** anything not obvious from the code.
+
+## Domain rules / invariants
+Non-negotiables the team must never violate. Examples:
+- "Never direct-insert into X; use the `submit_*` RPC (anonymity)."
+- "Migrations are append-only; new file in `migrations/`, next number in sequence."
+- "All money is integer cents, never floats."
+
+## Common task patterns
+Recipes for recurring work, so the planner/coder don't re-derive them. Examples:
+- **Add a form field:** edit `form.tsx` → update schema in `actions/*.ts` → ...
+- **Schema change:** write migration → update `schema.sql` → update types → ...
+
+## Gotchas
+Surprises that have bitten people. Coupling, footguns, "don't touch X."
