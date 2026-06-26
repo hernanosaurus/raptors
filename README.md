@@ -174,3 +174,7 @@ raptors/
 └── templates/
     └── CLAUDE.md.template       per-project context glue
 ```
+
+## License
+
+[MIT](LICENSE) © hernanosaurus — use it, fork it, adapt it freely.
