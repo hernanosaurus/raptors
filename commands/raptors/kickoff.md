@@ -3,7 +3,7 @@ description: Start a project from scratch — turn a product idea into a scaffol
 argument-hint: <product idea, e.g. "a recipe app where users save and rate recipes">
 ---
 
-You are orchestrating the **/raptors:new** pipeline — the from-zero entry point for a greenfield project:
+You are orchestrating the **/raptors:kickoff** pipeline — the from-zero entry point for a greenfield project:
 
 > $ARGUMENTS
 
@@ -30,7 +30,7 @@ Goal: go from an idea to a repo you can immediately start `/raptors:ship`-ing in
 ## Final report
 
 ```
-## /raptors:new result
+## /raptors:kickoff result
 **Product:** one line.
 **Stack:** chosen stack + why (brief).
 **Scaffolded:** what now exists (structure, skeleton, smoke test status).

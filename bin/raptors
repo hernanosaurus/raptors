@@ -31,7 +31,7 @@ KIT_DIR="$(cd -P "$(dirname "$SOURCE")/.." && pwd)"
 AGENTS=("strategist" "researcher" "architect" "planner" "designer" "coder" \
         "tester" "reviewer" "debugger" "security-reviewer" "scribe" "release-writer")
 # Pack commands live in commands/raptors/ → invoked as /raptors:ship etc.
-COMMANDS=("new" "ship" "fix" "triage" "review" "explore" "onboard" "debt" "audit" "release")
+COMMANDS=("kickoff" "ship" "fix" "triage" "review" "explore" "onboard" "debt" "audit" "release")
 
 usage() { sed -n '3,19p' "$0" | sed 's/^# \{0,1\}//'; }
 

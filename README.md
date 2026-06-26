@@ -45,7 +45,7 @@ and autocomplete shows the whole pack.
 
 | Command | Chain | Output |
 |---|---|---|
-| **/raptors:new** `<idea>` | strategist → architect → coder → tester → scribe | A scaffolded, runnable project + first CLAUDE.md + backlog (from scratch) |
+| **/raptors:kickoff** `<idea>` | strategist → architect → coder → tester → scribe | A scaffolded, runnable project + first CLAUDE.md + backlog (from scratch) |
 | **/raptors:ship** `<task>` | (architect) → planner → (designer) → coder → tester → reviewer → scribe | Working, tested, reviewed change + captured knowledge |
 | **/raptors:fix** `<bug>` | debugger → planner → coder → tester → reviewer → scribe | Root-caused fix + regression test + lesson recorded |
 | **/raptors:triage** `<idea>` | strategist → planner | A ready-to-ship scoped task (no code) |
@@ -64,12 +64,10 @@ and autocomplete shows the whole pack.
 
 The pack is built for a project you live with, not just a one-off task:
 
-- **Start:** `/raptors:new` for a from-scratch app (scaffold + first `CLAUDE.md` + backlog), or `/raptors:onboard` a cold existing repo → warm `CLAUDE.md` for everyone after you.
+- **Start:** `/raptors:kickoff` for a from-scratch app (scaffold + first `CLAUDE.md` + backlog), or `/raptors:onboard` a cold existing repo → warm `CLAUDE.md` for everyone after you.
 - **Build:** `/raptors:triage` to scope → `/raptors:ship` to build (the scribe captures what's learned each time).
 - **Maintain:** `/raptors:fix` bugs with reproduction-first discipline; `/raptors:debt` to clean up safely; `/raptors:audit` to keep deps/security healthy.
 - **Deliver:** `/raptors:review` before merge; `/raptors:release` for PR text and changelogs.
-
-📖 **See [USAGE.md](USAGE.md) for the ideal step order, when to use each command, and how the agents chain.**
 
 The thread that makes it compound: **the scribe writes down what the team learns**, so month 6 isn't day-one for the 180th time.
 

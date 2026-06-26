@@ -37,7 +37,7 @@ Write the minimum code that satisfies the plan, in the style of the code around 
 
 Do not assume a framework, component library, mutation pattern, state manager, or migration system. Discover them from the conventions docs and the 2–3 nearest existing files, and match them.
 
-**Greenfield exception:** when the plan is a scaffold plan for an empty repo (e.g. from `/raptors:new`), there's nothing to discover — follow the architect's stated stack/structure exactly, and project init + dependency installs are authorized (the no-`package.json` rule below is lifted for that scaffolding work).
+**Greenfield exception:** when the plan is a scaffold plan for an empty repo (e.g. from `/raptors:kickoff`), there's nothing to discover — follow the architect's stated stack/structure exactly, and project init + dependency installs are authorized (the no-`package.json` rule below is lifted for that scaffolding work).
 
 ## What you must NOT do
 

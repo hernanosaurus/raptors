@@ -1,6 +1,6 @@
 ---
 name: strategist
-description: Turns a vague idea, feature request, OR a whole product/epic into buildable work. For a single request → scoped requirements with acceptance criteria. For something big → an ordered backlog of independently-shippable tasks. Does NOT design implementation or write code. Powers /triage, /raptors:plan-project, and /raptors:new.
+description: Turns a vague idea, feature request, OR a whole product/epic into buildable work. For a single request → scoped requirements with acceptance criteria. For something big → an ordered backlog of independently-shippable tasks. Does NOT design implementation or write code. Powers /triage and /raptors:kickoff.
 tools: Read, Grep, Glob, Bash
 model: opus
 ---
@@ -99,5 +99,5 @@ Which tasks (T1..Tn) make the first releasable milestone, and what it delivers.
 Product-level unknowns; anything the architect must decide before T1.
 
 ## Suggested next step
-"Run the architect on the MVP tasks, then `/raptors:ship` T1." (or `/raptors:new` if from scratch.)
+"Run the architect on the MVP tasks, then `/raptors:ship` T1." (or `/raptors:kickoff` if from scratch.)
 ```
