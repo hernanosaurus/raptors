@@ -48,8 +48,8 @@ and autocomplete shows the whole pack.
 | **/raptors:kickoff** `<idea>` | strategist → architect → coder → tester → scribe | A scaffolded, runnable project + first CLAUDE.md + backlog (from scratch) |
 | **/raptors:setup** `[mcp]` | — (config helper) | Tuned settings.json, optional .mcp.json, ensures CLAUDE.md — run once per repo |
 | **/raptors:status** | — (read-only) | What's shipped / in flight / next, from the backlog |
-| **/raptors:ship** `<task>` | (architect) → planner → (designer) → coder → tester → (security) → reviewer → scribe | Working, tested, reviewed change + captured knowledge |
-| **/raptors:fix** `<bug>` | debugger → planner → coder → tester → (security) → reviewer → scribe | Root-caused fix + regression test + lesson recorded |
+| **/raptors:ship** `<task>` `[--verify\|--test]` | (architect) → planner → (designer) → coder → tester → (security) → reviewer → scribe | Working, verified, reviewed change + captured knowledge |
+| **/raptors:fix** `<bug>` `[--verify\|--test]` | debugger → planner → coder → tester → (security) → reviewer → scribe | Root-caused, verified fix + lesson recorded |
 | **/raptors:triage** `<idea>` | strategist → planner | A ready-to-ship scoped task (no code) |
 | **/raptors:review** `[base/PR]` | (tester) → reviewer | Verdict on a diff |
 | **/raptors:explore** `<question>` | researcher(s) | A cited map of the codebase |
@@ -61,6 +61,12 @@ and autocomplete shows the whole pack.
 
 > The bootstrap command is intentionally flat (`/raptor-install`, not `/raptors:install`)
 > so it's available *before* the pack is installed in a repo — no chicken-and-egg.
+
+> **Verify vs. test (rapid dev by default).** `ship` and `fix` **default to verify-only** —
+> they typecheck/lint/build and exercise the actual behavior, but write **no test files**.
+> That matches fast product work and keeps tokens down. Add **`--test`** when a change is
+> worth locking in with automated tests (core logic, a bug you don't want returning, pre-release).
+> `--verify` is the explicit form of the default.
 
 > **Security is token-aware.** `(security)` in the `ship`/`fix` chains is a *conditional*
 > stage: the security-reviewer fires automatically **only when the diff touches

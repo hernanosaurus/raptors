@@ -1,13 +1,21 @@
 ---
-description: Run a feature/bug task through the full team pipeline — planner → coder → tester → reviewer — with autonomous handoff between stages.
-argument-hint: <task description, or a ticket id / link>
+description: Run a feature/bug task through the full team pipeline — planner → coder → tester → reviewer — with autonomous handoff between stages. Defaults to verify-only (no tests written); pass --test to author automated tests.
+argument-hint: <task description> [--verify | --test]
 ---
 
 You are orchestrating the **/raptors:ship** pipeline for this task:
 
 > $ARGUMENTS
 
-Run the four-agent pipeline end to end. Use the Agent tool to invoke each stage; pass the previous stage's full output as the next stage's input. Do not do the work yourself — delegate to the agents.
+Run the pipeline end to end. Use the Agent tool to invoke each stage; pass the previous stage's full output as the next stage's input. Do not do the work yourself — delegate to the agents.
+
+## Verification mode
+
+Read the flag from the arguments (strip it from the task description before passing it on):
+- `--test` → run the tester in **TEST mode** (verify AND author automated tests).
+- `--verify` (or no flag) → run the tester in **VERIFY mode** — typecheck/lint/build + exercise the behavior, **no test files written**. This is the default, tuned for rapid development.
+
+State which mode you're running in your final report.
 
 ## Stages
 
@@ -16,7 +24,7 @@ Run the four-agent pipeline end to end. Use the Agent tool to invoke each stage;
    - If it returns `## Trivial — pass through`, skip straight to coder.
 2. **coder** — execute the plan.
    - If `needs-clarification` or `plan-is-wrong`, send it back to the **planner** once with the coder's `## Why`. If the planner can resolve it, continue; otherwise stop and ask the user.
-3. **tester** — write tests and get the suite green.
+3. **tester** — verify the change works, in the mode chosen above (VERIFY by default, TEST if `--test`). Pass the mode explicitly to the agent.
    - If `bug-found`, send the bug report back to the **coder** to fix, then re-run the **tester**. Loop at most twice; if still failing, stop and report.
 4. **security-reviewer** (CONDITIONAL — token-saving gate). Inspect the diff and invoke the security-reviewer **only if** the change:
    - touches **dependencies** (`package.json`, lockfiles, or any added/removed package), OR
@@ -48,8 +56,9 @@ When the reviewer returns `APPROVE` (or you stop early), summarize for the user:
 ## /raptors:ship result: <SHIPPED / BLOCKED at <stage>>
 
 **Task:** one line.
+**Mode:** verify (no tests) | test (tests authored).
 **Files changed:** list from the coder.
-**Tests:** what the tester added + suite status.
+**Verification:** what the tester ran/observed; tests added if TEST mode.
 **Security:** ran (verdict) / skipped (why — no deps or sensitive surfaces touched).
 **Review:** verdict + any non-blocking issues left for the user.
 **Knowledge captured:** what the scribe recorded, if anything.
