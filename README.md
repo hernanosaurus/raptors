@@ -54,8 +54,8 @@ and autocomplete shows the whole pack.
 | **/raptors:review** `[base/PR]` | (tester) → reviewer | Verdict on a diff |
 | **/raptors:explore** `<question>` | researcher(s) | A cited map of the codebase |
 | **/raptors:onboard** `[area]` | researcher(s) → scribe | Project mental model, persisted to CLAUDE.md |
-| **/raptors:debt** `[area]` | researcher + reviewer → (ship per item) → scribe | Prioritized debt, paid down safely with consent |
-| **/raptors:audit** `[scope]` | security-reviewer → (ship per fix) → re-audit → scribe | Ranked vulns, remediated with consent |
+| **/raptors:debt** `[area]` `[--verify\|--test]` | researcher + reviewer → (ship per item) → scribe | Prioritized debt, paid down safely with consent |
+| **/raptors:audit** `[scope]` `[--verify\|--test]` | security-reviewer → (ship per fix) → re-audit → scribe | Ranked vulns, remediated with consent |
 | **/raptors:release** `[base/PR/range]` | release-writer | PR description / changelog / release notes |
 | **/raptor-install** | — | Bootstrap: releases the pack into the current repo (flat, always-available) |
 
