@@ -6,6 +6,8 @@
 #   raptors install [dir]     Install agents+commands into <dir>/.claude (default: cwd)
 #   raptors link    [dir]     Same, but symlink (pack edits propagate to the project)
 #   raptors update  [dir]     Re-copy the latest pack files into <dir>/.claude
+#   raptors update-all        Update every repo raptors is installed in (from the registry)
+#   raptors list              List repos raptors is installed in
 #   raptors global            Install the /raptors-install slash command at ~/.claude
 #   raptors remove  [dir]     Remove the pack's agents+commands from <dir>/.claude
 #   raptors where             Print the pack's source location
@@ -29,12 +31,27 @@ while [ -h "$SOURCE" ]; do
 done
 KIT_DIR="$(cd -P "$(dirname "$SOURCE")/.." && pwd)"
 
+# Registry of repos the pack is installed into — one absolute path per line.
+REGISTRY="${RAPTORS_REGISTRY:-$HOME/.config/raptors/installs}"
+
+reg_add() { # $1=project dir → record its absolute path (deduped)
+  local p; p="$(cd "$1" 2>/dev/null && pwd)" || return 0
+  mkdir -p "$(dirname "$REGISTRY")"; touch "$REGISTRY"
+  grep -qxF "$p" "$REGISTRY" || echo "$p" >> "$REGISTRY"
+}
+reg_remove() { # $1=project dir → forget it
+  [ -f "$REGISTRY" ] || return 0
+  local p; p="$(cd "$1" 2>/dev/null && pwd)" || return 0
+  grep -vxF "$p" "$REGISTRY" > "$REGISTRY.tmp" 2>/dev/null || true
+  mv "$REGISTRY.tmp" "$REGISTRY" 2>/dev/null || true
+}
+
 AGENTS=("strategist" "researcher" "architect" "planner" "designer" "coder" \
         "tester" "reviewer" "debugger" "security-reviewer" "scribe" "release-writer")
 # Pack commands live in commands/raptors/ → invoked as /raptors:ship etc.
 COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "review" "explore" "onboard" "debt" "audit" "release")
 
-usage() { sed -n '3,19p' "$0" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '3,21p' "$0" | sed 's/^# \{0,1\}//'; }
 
 DRY_RUN=0
 N_ADD=0; N_OVER=0; N_SKIP=0
@@ -103,6 +120,7 @@ case "$cmd" in
     echo "Releasing the raptors into $target/.claude (copy):"
     copy_kit "$target/.claude" copy
     [ "$DRY_RUN" = 1 ] && exit 0
+    reg_add "$target"
     [ -f "$target/CLAUDE.md" ] || {
       echo ""
       echo "No CLAUDE.md in $target. Give the pack project context:"
@@ -111,11 +129,38 @@ case "$cmd" in
   link)
     echo "Linking the raptors into $target/.claude (symlinks):"
     copy_kit "$target/.claude" link
+    [ "$DRY_RUN" = 1 ] || reg_add "$target"
     ;;
   update)
     [ -d "$target/.claude" ] || { echo "No .claude in $target. Run: raptors install"; exit 1; }
     echo "Updating the raptors in $target/.claude:"
     copy_kit "$target/.claude" copy
+    [ "$DRY_RUN" = 1 ] || reg_add "$target"
+    ;;
+  update-all)
+    [ -f "$REGISTRY" ] && [ -s "$REGISTRY" ] || { echo "No registered repos yet. They're recorded automatically when you 'raptors install' / 'link'."; exit 0; }
+    ok=0; gone=0
+    while IFS= read -r p; do
+      [ -n "$p" ] || continue
+      if [ -d "$p/.claude" ]; then
+        echo "── $p"
+        copy_kit "$p/.claude" copy
+        ok=$((ok+1))
+      else
+        echo "── $p  (skipped — no .claude; forgetting it)"
+        reg_remove "$p"; gone=$((gone+1))
+      fi
+    done < "$REGISTRY"
+    echo ""
+    echo "Updated $ok repo(s)."
+    [ "$gone" -gt 0 ] && echo "Forgot $gone stale entr(y/ies)."
+    ;;
+  list)
+    if [ -f "$REGISTRY" ] && [ -s "$REGISTRY" ]; then
+      echo "Repos with raptors installed:"; sed 's/^/  /' "$REGISTRY"
+    else
+      echo "No registered repos yet."
+    fi
     ;;
   global)
     mkdir -p "$HOME/.claude/commands"
@@ -128,6 +173,7 @@ case "$cmd" in
     for c in "${COMMANDS[@]}"; do rm -f "$target/.claude/commands/raptors/$c.md"; done
     rmdir "$target/.claude/commands/raptors" 2>/dev/null || true
     rm -f "$target/.claude/commands/raptors-install.md"
+    reg_remove "$target"
     echo "Recalled the raptors from $target/.claude (CLAUDE.md left untouched)."
     ;;
   where) echo "$KIT_DIR" ;;
