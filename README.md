@@ -57,9 +57,9 @@ and autocomplete shows the whole pack.
 | **/raptors:debt** `[area]` `[--verify\|--test]` | researcher + reviewer → (ship per item) → scribe | Prioritized debt, paid down safely with consent |
 | **/raptors:audit** `[scope]` `[--verify\|--test]` | security-reviewer → (ship per fix) → re-audit → scribe | Ranked vulns, remediated with consent |
 | **/raptors:release** `[base/PR/range]` | release-writer | PR description / changelog / release notes |
-| **/raptor-install** | — | Bootstrap: releases the pack into the current repo (flat, always-available) |
+| **/raptors-install** | — | Bootstrap: releases the pack into the current repo (flat, always-available) |
 
-> The bootstrap command is intentionally flat (`/raptor-install`, not `/raptors:install`)
+> The bootstrap command is intentionally flat (`/raptors-install`, not `/raptors:install`)
 > so it's available *before* the pack is installed in a repo — no chicken-and-egg.
 
 > **Verify vs. test (rapid dev by default).** `ship` and `fix` **default to verify-only** —
@@ -93,11 +93,11 @@ The thread that makes it compound: **the scribe writes down what the team learns
 ```bash
 git clone <your-repo-url> ~/Documents/raptors
 cd ~/Documents/raptors
-./bootstrap.sh          # adds `raptors` to PATH + installs the /raptor-install command
+./bootstrap.sh          # adds `raptors` to PATH + installs the /raptors-install command
 ```
 
 Open a new terminal (or `source ~/.zshrc`). The `raptors` CLI and the
-`/raptor-install` slash command are now available everywhere — but the pack is
+`/raptors-install` slash command are now available everywhere — but the pack is
 released into a repo **only when you ask**.
 
 ## Release the pack into a repo
@@ -134,8 +134,8 @@ To restore an original after an overwrite: `mv agents/planner.md.bak agents/plan
 
 **From inside a Claude session in that project:**
 ```
-/raptor-install            # copy
-/raptor-install --link     # symlink
+/raptors-install            # copy
+/raptors-install --link     # symlink
 ```
 
 Then give the pack context:
@@ -143,7 +143,7 @@ Then give the pack context:
 cp ~/Documents/raptors/templates/CLAUDE.md.template /path/to/project/CLAUDE.md
 # edit it: stack, verify commands, conventions, domain rules
 ```
-(`/raptor-install` will offer to create and fill this in for you.)
+(`/raptors-install` will offer to create and fill this in for you.)
 
 ## Using the raptors
 
@@ -218,7 +218,7 @@ raptors/
 ├── agents/                      the 12 raptors (flat, role-named)
 ├── commands/
 │   ├── raptors/                 the pipelines → /raptors:<name>
-│   └── raptor-install.md        flat bootstrap → /raptor-install
+│   └── raptors-install.md       flat bootstrap → /raptors-install
 └── templates/
     └── CLAUDE.md.template       per-project context glue
 ```

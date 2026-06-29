@@ -17,7 +17,7 @@ path, or project.** Agents discover conventions at runtime from the target repo'
 | Layer | Lives in | Per-project? |
 |---|---|---|
 | Agents (roles) | `agents/*.md` | No — generic |
-| Commands (pipelines) | `commands/raptors/*.md` + `commands/raptor-install.md` | No — generic |
+| Commands (pipelines) | `commands/raptors/*.md` + `commands/raptors-install.md` | No — generic |
 | Project config (stack, settings, mcp) | the *target* repo (`CLAUDE.md`, `.claude/settings.json`, `.mcp.json`) | Yes |
 
 If you're tempted to put a stack-specific rule in an agent, it belongs in the
@@ -27,7 +27,7 @@ target project's `CLAUDE.md` instead (or `templates/CLAUDE.md.template`).
 
 1. **Every agent file in `agents/` must be listed in the `AGENTS=(...)` array in `bin/raptors`.** The array drives `raptors remove`; an orphan means `remove` leaves files behind.
 2. **Every command file in `commands/raptors/` must be listed in the `COMMANDS=(...)` array in `bin/raptors`.** Same reason.
-3. **Pack commands live in `commands/raptors/`** so they namespace as `/raptors:<name>`. The only flat command is `commands/raptor-install.md` → `/raptors-install` bootstrap. Don't add flat pack commands (they'd risk colliding with built-ins).
+3. **Pack commands live in `commands/raptors/`** so they namespace as `/raptors:<name>`. The only flat command is `commands/raptors-install.md` → `/raptors-install` bootstrap. Don't add flat pack commands (they'd risk colliding with built-ins).
 4. **Agents are flat and role-named** (`planner.md`, not `raptor-planner.md`). Commands reference them by bare name.
 5. **No git operations inside agents/commands.** The human commits. Only `coder`/`tester` may write code/tests; review-type agents never edit.
 

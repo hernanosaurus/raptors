@@ -6,7 +6,7 @@
 #   raptors install [dir]     Install agents+commands into <dir>/.claude (default: cwd)
 #   raptors link    [dir]     Same, but symlink (pack edits propagate to the project)
 #   raptors update  [dir]     Re-copy the latest pack files into <dir>/.claude
-#   raptors global            Install the /raptor-install slash command at ~/.claude
+#   raptors global            Install the /raptors-install slash command at ~/.claude
 #   raptors remove  [dir]     Remove the pack's agents+commands from <dir>/.claude
 #   raptors where             Print the pack's source location
 #   raptors check             Verify kit invariants (disk files ↔ AGENTS/COMMANDS arrays)
@@ -74,8 +74,8 @@ copy_kit() { # $1=dest .claude dir, $2=copy|link
   # pack commands keep the raptors/ subdir so they namespace as /raptors:<name>
   for f in "$KIT_DIR"/commands/raptors/*.md; do [ -e "$f" ] || continue
     place "$f" "$dest/commands/raptors/$(basename "$f")" "$mode"; done
-  # flat bootstrap command (/raptor-install)
-  place "$KIT_DIR/commands/raptor-install.md" "$dest/commands/raptor-install.md" "$mode"
+  # flat bootstrap command (/raptors-install)
+  place "$KIT_DIR/commands/raptors-install.md" "$dest/commands/raptors-install.md" "$mode"
 
   echo ""
   if [ "$DRY_RUN" = 1 ]; then
@@ -119,15 +119,15 @@ case "$cmd" in
     ;;
   global)
     mkdir -p "$HOME/.claude/commands"
-    cp "$KIT_DIR/commands/raptor-install.md" "$HOME/.claude/commands/raptor-install.md"
-    echo "Installed /raptor-install slash command at ~/.claude/commands."
+    cp "$KIT_DIR/commands/raptors-install.md" "$HOME/.claude/commands/raptors-install.md"
+    echo "Installed /raptors-install slash command at ~/.claude/commands."
     echo "It is now available in every Claude session, but only acts when you run it."
     ;;
   remove)
     for a in "${AGENTS[@]}";   do rm -f "$target/.claude/agents/$a.md"; done
     for c in "${COMMANDS[@]}"; do rm -f "$target/.claude/commands/raptors/$c.md"; done
     rmdir "$target/.claude/commands/raptors" 2>/dev/null || true
-    rm -f "$target/.claude/commands/raptor-install.md"
+    rm -f "$target/.claude/commands/raptors-install.md"
     echo "Recalled the raptors from $target/.claude (CLAUDE.md left untouched)."
     ;;
   where) echo "$KIT_DIR" ;;
@@ -148,7 +148,7 @@ case "$cmd" in
       [ -f "$KIT_DIR/commands/raptors/$n.md" ] || { echo "COMMANDS array lists nonexistent command: $n"; fail=1; }
     done
     # The flat bootstrap command must exist.
-    [ -f "$KIT_DIR/commands/raptor-install.md" ] || { echo "MISSING: commands/raptor-install.md"; fail=1; }
+    [ -f "$KIT_DIR/commands/raptors-install.md" ] || { echo "MISSING: commands/raptors-install.md"; fail=1; }
     if [ "$fail" = 0 ]; then
       echo "OK — ${#AGENTS[@]} agents, ${#COMMANDS[@]} commands, all in sync."
     else

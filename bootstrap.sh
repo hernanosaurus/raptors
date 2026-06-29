@@ -4,7 +4,7 @@
 #
 # It:
 #   1. Adds the `raptors` command to your PATH (via a line in your shell rc).
-#   2. Installs the /raptor-install slash command at the user level (~/.claude).
+#   2. Installs the /raptors-install slash command at the user level (~/.claude).
 #
 # Usage:  ./bootstrap.sh
 #
@@ -32,10 +32,10 @@ fi
 
 # 2. Install the global bootstrap slash command.
 mkdir -p "$HOME/.claude/commands"
-cp "$KIT_DIR/commands/raptor-install.md" "$HOME/.claude/commands/raptor-install.md"
-echo "Installed /raptor-install slash command at ~/.claude/commands."
+cp "$KIT_DIR/commands/raptors-install.md" "$HOME/.claude/commands/raptors-install.md"
+echo "Installed /raptors-install slash command at ~/.claude/commands."
 
 echo ""
 echo "Done. Open a new terminal (or 'source $RC'), then:"
 echo "  cd <any project> && raptors install ."
-echo "or, inside a Claude session in that project, run: /raptor-install"
+echo "or, inside a Claude session in that project, run: /raptors-install"
