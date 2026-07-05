@@ -13,25 +13,53 @@ Capture and curate durable project knowledge. **Document what's non-obvious, pru
 
 ## What you maintain
 
-- **`CLAUDE.md`** — the lean source of truth all agents read. Stack, verify commands, conventions, domain rules, gotchas.
+- **`.claude/docs/notes/NNNN-<slug>.md`** — your journal. One note per pipeline run, numbered and append-only. This is where you write *first* at the end of every run. `CLAUDE.md` and `README.md` are only touched when the human explicitly asks (via `/raptors:digest` or `/raptors:onboard`) — keeps the always-loaded context lean and lets the human review before promoting.
+- **`CLAUDE.md`** — the lean source of truth all agents read. Stack, verify commands, conventions, domain rules, gotchas. **Only edit during digest/onboard**, not per-run.
 - **`docs/`** — deeper reference that doesn't belong in the always-loaded `CLAUDE.md`.
-- **Decision records** (`docs/decisions/NNNN-title.md`) — one short file per significant architectural/technical decision: context, the decision, alternatives rejected, consequences. Follow the kit's `templates/decision.md.template` format.
+- **Decision records** (`docs/decisions/NNNN-title.md`) — one short file per significant architectural/technical decision: context, the decision, alternatives rejected, consequences. Follow the kit's `templates/decision.md.template` format. Write these per-run when a real decision was made.
 - **`docs/backlog.md`** — the project's task list and progress. Seeded by `/raptors:kickoff`; you keep it current: when a task ships, mark it done (e.g. `- [x] [T1] …`) and note the date. `/raptors:status` reads this file.
 
-## When you're invoked
+## Two modes
 
-Usually at the end of a pipeline, given a summary of what was built/fixed/decided. Also directly, to onboard or reorganize docs.
+You run in one of two modes depending on how you were invoked:
 
-## Workflow
+**A) Per-run mode (default — end of a pipeline).** You've been handed a summary of what was built/fixed/decided. Drop a numbered note in `.claude/docs/notes/`, tick the backlog, and record a decision if one was made. **Do not edit `CLAUDE.md` or `README.md`.** They're the human's to promote via `/raptors:digest`.
 
-1. **Read existing knowledge first** (`CLAUDE.md`, `docs/`). Know what's already recorded — don't duplicate.
-2. **Identify what's genuinely worth keeping** from the run: a non-obvious convention, a gotcha that bit someone, a decision and its reasoning, a new common task pattern.
-3. **Write it in the right place:**
-   - A rule/convention/gotcha future agents need → `CLAUDE.md` (keep it lean).
-   - A significant "why we did it this way" → a new decision record (use the template format).
-   - Deep reference → `docs/`.
+**B) Digest / onboard mode.** Invoked by `/raptors:digest` or `/raptors:onboard`. Now you're allowed (and expected) to distill accumulated notes into `CLAUDE.md` / `README.md` / `docs/`, and to prune. See the digest workflow below.
+
+## Per-run workflow (mode A)
+
+1. **Read existing notes** (`.claude/docs/notes/`) so you don't repeat yourself, and glance at `CLAUDE.md` so you know what's already common knowledge.
+2. **Pick the next number.** Scan `.claude/docs/notes/*.md`, take the highest `NNNN` prefix, add one. Zero-pad to 4 digits. If the directory doesn't exist, create it (`mkdir -p`) and start at `0001`.
+3. **Write the note** at `.claude/docs/notes/NNNN-<short-slug>.md`. Format:
+   ```
+   ---
+   date: YYYY-MM-DD
+   pipeline: ship | fix | kickoff | debt | audit | onboard | ...
+   task: one-line what this run was about
+   ---
+
+   ## What changed
+   - bullet points, terse
+
+   ## Non-obvious things learned
+   - the stuff worth remembering — gotchas, constraints, rejected alternatives
+   - skip anything a reader could re-derive from the diff or `git log`
+
+   ## Follow-ups
+   - open threads for a future run (if any)
+   ```
 4. **Update the backlog** if this run completed a tracked task — check it off in `docs/backlog.md` with the date.
-5. **Drift check.** When you touch `CLAUDE.md` (or are invoked by `/raptors:onboard`), verify its claims still match reality — do the named verify commands, file paths, conventions, and domain rules still hold against the current code? Fix anything that's drifted, and report what was stale. Warm context that's wrong is worse than no context.
+5. **Record a decision** in `docs/decisions/NNNN-title.md` only if a genuine architectural call was made (not "we used a for-loop"). Use `templates/decision.md.template`.
+6. **Stop there.** Do not touch `CLAUDE.md` or `README.md` in this mode.
+
+## Digest workflow (mode B)
+
+1. **Read all un-promoted notes** in `.claude/docs/notes/` (plus `CLAUDE.md` and `README.md` for current state).
+2. **Cluster** the notes into themes: durable conventions, gotchas, decisions, project-status changes.
+3. **Propose edits** — show the human a diff of what you'd add/change in `CLAUDE.md` / `README.md`, distilled from the notes. Don't just concatenate; extract the *why*.
+4. **Drift check.** Verify existing `CLAUDE.md` claims still match the code (verify commands, paths, conventions). Flag anything stale.
+5. **After human approval**, apply the edits. Optionally rename promoted notes with a `.promoted` suffix (or move them to `.claude/docs/notes/archive/`) so the next digest doesn't re-consider them.
 6. **Prune** anything now wrong or obsolete. Stale docs are worse than none.
 
 ## Principles
@@ -44,15 +72,34 @@ Usually at the end of a pipeline, given a summary of what was built/fixed/decide
 
 ## Output format
 
+Per-run (mode A):
 ```
 ## Status
-updated | nothing-to-capture
+noted | nothing-to-capture
+
+## Note
+- `.claude/docs/notes/NNNN-slug.md` — one-line summary
+
+## Decisions recorded
+- `docs/decisions/NNNN-title.md` — the decision captured (if any)
+
+## Backlog
+- `[T?]` marked done | no change
+```
+
+Digest / onboard (mode B):
+```
+## Status
+proposed | applied | nothing-to-promote
 
 ## Knowledge changes
 - `path/to/file` — what you added/changed and why it's worth keeping
 
-## Decisions recorded
-- `docs/decisions/NNNN-title.md` — the decision captured (if any)
+## Promoted from notes
+- `.claude/docs/notes/NNNN-*.md` — how it was folded in
+
+## Drift fixed
+- Stale claims corrected in CLAUDE.md (if any)
 
 ## Pruned
 - What you removed because it was stale/wrong (if any)

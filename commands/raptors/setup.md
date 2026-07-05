@@ -30,6 +30,8 @@ KIT="$(raptors where 2>/dev/null || echo "$HOME/Documents/raptors")"
 
 5. **Decision records:** if the project will track architectural decisions, create `docs/decisions/` and copy `$KIT/templates/decision.md.template` as a starting point (the scribe uses this format).
 
+> Note: `.claude/docs/notes/` (the scribe's per-run journal) is created by `raptors install` — you don't need to do anything here.
+
 ## Rules
 
 - **Never write real secrets** into any file. Env var references only.

@@ -49,7 +49,7 @@ reg_remove() { # $1=project dir → forget it
 AGENTS=("strategist" "researcher" "architect" "planner" "designer" "coder" \
         "tester" "reviewer" "debugger" "security-reviewer" "scribe" "release-writer")
 # Pack commands live in commands/raptors/ → invoked as /raptors:ship etc.
-COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "review" "explore" "onboard" "debt" "audit" "release")
+COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "review" "explore" "onboard" "debt" "audit" "release" "digest")
 
 usage() { sed -n '3,21p' "$0" | sed 's/^# \{0,1\}//'; }
 
@@ -93,6 +93,24 @@ copy_kit() { # $1=dest .claude dir, $2=copy|link
     place "$f" "$dest/commands/raptors/$(basename "$f")" "$mode"; done
   # flat bootstrap command (/raptors-install)
   place "$KIT_DIR/commands/raptors-install.md" "$dest/commands/raptors-install.md" "$mode"
+
+  # Scribe scratch space: per-run numbered notes drop here at pipeline end.
+  # Same on every project — no stack detection needed, so it belongs in install
+  # rather than setup. Never touched if it already exists.
+  if [ "$DRY_RUN" = 0 ]; then
+    mkdir -p "$dest/docs/notes"
+    if [ ! -e "$dest/docs/README.md" ]; then
+      cat > "$dest/docs/README.md" <<'EOF'
+# .claude/docs/
+
+Scribe scratch space. The `scribe` agent drops one numbered note per pipeline
+run in `notes/` (e.g. `notes/0001-add-login.md`). Run `/raptors:digest` to fold
+accumulated notes into `CLAUDE.md` / `README.md` after human review.
+
+Nothing here is loaded automatically by agents — it's a journal, not context.
+EOF
+    fi
+  fi
 
   echo ""
   if [ "$DRY_RUN" = 1 ]; then
