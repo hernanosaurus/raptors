@@ -33,7 +33,7 @@ target project's `CLAUDE.md` instead (or `templates/CLAUDE.md.template`).
 
 ## Conventions
 
-- **Model tiering** (cost): Opus = architect, planner, debugger, reviewer, security-reviewer · Sonnet = coder, tester, strategist, designer · Haiku = researcher, scribe, release-writer. Put the cheapest model that does the job in each agent's `model:` frontmatter.
+- **Model tiering** (cost): Opus = architect, planner, debugger, reviewer, security-reviewer, critic, reframer, chairman · Sonnet = coder, tester, strategist, designer, optimist, outsider, operator · Haiku = researcher, scribe, release-writer. Put the cheapest model that does the job in each agent's `model:` frontmatter.
 - **Agent frontmatter:** `name`, `description`, `tools`, `model`. Keep `description` precise — it's how the orchestrator picks the agent.
 - **Escalation contract:** agents return a clear status (`needs-clarification` / `plan-is-wrong` / `bug-found` / etc.) instead of guessing. Preserve this when editing.
 - **Output formats** are part of the contract — the next stage consumes them. Don't change an agent's output shape without checking who reads it.

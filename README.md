@@ -36,6 +36,12 @@ not a dozen agents.
 | **security-reviewer** | Vulnerability + dependency audit, ranked by severity | No |
 | **scribe** | Maintains CLAUDE.md / docs / decision records — the team's memory | Docs only |
 | **release-writer** | PR descriptions, changelogs, release notes from a diff | No |
+| **critic** | Finds the strongest reason an idea/plan fails — steel-manned objections | No |
+| **reframer** | Asks "is this the right problem?" — surfaces alternative framings | No |
+| **optimist** | Steel-mans the upside — concrete wins and second-order effects | No |
+| **outsider** | Fresh-eyes reaction to an idea, page, or flow — as a first-time user | No |
+| **operator** | Feasibility check + the cheapest test to de-risk the bet | No |
+| **chairman** | Presides over `/raptors:council` — rules pursue / reframe / defer / kill | No |
 
 ## Pipelines (commands)
 
@@ -45,6 +51,8 @@ and autocomplete shows the whole pack.
 
 | Command | Chain | Output |
 |---|---|---|
+| **/raptors:council** `<idea>` | critic ∥ reframer ∥ optimist ∥ outsider ∥ operator → chairman → scribe | Verdict on whether to pursue: pursue / reframe / defer / kill (no code) |
+| **/raptors:outsider** `<target>` | outsider | Fresh-eyes reaction to a page, spec, flow, or copy — product feedback |
 | **/raptors:kickoff** `<idea>` | strategist → architect → coder → tester → scribe | A scaffolded, runnable project + first CLAUDE.md + backlog (from scratch) |
 | **/raptors:setup** `[mcp]` | — (config helper) | Tuned settings.json, optional .mcp.json, ensures CLAUDE.md — run once per repo |
 | **/raptors:status** | — (read-only) | What's shipped / in flight / next, from the backlog |
@@ -189,8 +197,8 @@ The pack is tuned for cost as well as quality — important when one `/raptors:s
 
 | Tier | Agents | Why |
 |---|---|---|
-| **Opus** | architect, planner, debugger, reviewer, security-reviewer | Judgment calls where a weaker model costs you in bad plans / missed bugs |
-| **Sonnet** | coder, tester, strategist, designer | Capable execution at a fraction of Opus cost |
+| **Opus** | architect, planner, debugger, reviewer, security-reviewer, critic, reframer, chairman | Judgment calls where a weaker model costs you in bad plans / missed bugs / mushy decisions |
+| **Sonnet** | coder, tester, strategist, designer, optimist, outsider, operator | Capable execution at a fraction of Opus cost |
 | **Haiku** | researcher, scribe, release-writer | Read/search/write-docs — mechanical work, no deep reasoning needed |
 
 This keeps the expensive reasoning on Opus while the grunt work runs cheap. Adjust any agent's `model:` frontmatter to taste.
@@ -216,7 +224,7 @@ raptors/
 ├── bootstrap.sh                 one-time per-machine setup (PATH + bootstrap command)
 ├── install.sh                   thin wrapper around bin/raptors
 ├── bin/raptors                  the CLI you run from any terminal
-├── agents/                      the 12 raptors (flat, role-named)
+├── agents/                      the 18 raptors (flat, role-named)
 ├── commands/
 │   ├── raptors/                 the pipelines → /raptors:<name>
 │   └── raptors-install.md       flat bootstrap → /raptors-install

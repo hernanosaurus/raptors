@@ -47,9 +47,10 @@ reg_remove() { # $1=project dir → forget it
 }
 
 AGENTS=("strategist" "researcher" "architect" "planner" "designer" "coder" \
-        "tester" "reviewer" "debugger" "security-reviewer" "scribe" "release-writer")
+        "tester" "reviewer" "debugger" "security-reviewer" "scribe" "release-writer" \
+        "critic" "reframer" "optimist" "outsider" "operator" "chairman")
 # Pack commands live in commands/raptors/ → invoked as /raptors:ship etc.
-COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "review" "explore" "onboard" "debt" "audit" "release" "digest")
+COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "review" "explore" "onboard" "debt" "audit" "release" "digest" "council" "outsider")
 
 usage() { sed -n '3,21p' "$0" | sed 's/^# \{0,1\}//'; }
 
