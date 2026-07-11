@@ -34,7 +34,7 @@ State which mode you're running in your final report.
    - If invoked and it returns `ISSUES-FOUND`, send the findings (severity-ordered) to the **coder** to remediate, then re-run the **tester** and re-run the **security-reviewer** on the new diff. Loop at most twice.
 5. **reviewer** — review the full diff.
    - If `REQUEST_CHANGES`, send the blocking issues to the **coder**, then re-run the **tester** and **reviewer** on the new diff. Loop at most twice.
-6. **scribe** (knowledge capture) — after `APPROVE`, give the scribe a summary of what was built and any non-obvious decision/gotcha discovered. It records anything durable in `CLAUDE.md`/`docs` so the next run starts warmer. **If this task came from the backlog** (e.g. you ran `/raptors:ship T3`), it also checks the task off in `docs/backlog.md`. If nothing was learned worth keeping, it returns `nothing-to-capture` — that's fine.
+6. **scribe** (knowledge capture) — after `APPROVE`, give the scribe a summary of what was built and any non-obvious decision/gotcha discovered. It drops a per-run note in `.claude/docs/notes/`, and records a decision in `.claude/docs/decisions/` if a real architectural call was made. **If this task came from the backlog** (e.g. you ran `/raptors:ship 0003` or referenced a `backlogs/` file), it also flips that item's `.claude/docs/backlogs/NNNN_*.md` to `status: done` with a `completed:` date — or `partial` if only some of it landed. If nothing was learned worth keeping, it returns `nothing-to-capture` — that's fine.
 
 ## Optional stages
 

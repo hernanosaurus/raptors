@@ -1,0 +1,22 @@
+---
+status: pending
+topic: <one-line what this explores>
+pipeline: explore
+date: YYYY-MM-DD
+# completed: YYYY-MM-DD   (set when status == done — i.e. no open questions)
+---
+
+## Summary
+Short answer to the exploration question.
+
+## Key files
+- `path:line` — role
+
+## How it works
+Cited walkthrough — only if worth preserving beyond the diff.
+
+## Gotchas
+What would trip up a newcomer poking around here.
+
+## Open questions
+What's still unresolved. Non-empty → status stays `pending` or `partial`.

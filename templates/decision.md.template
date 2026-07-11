@@ -3,6 +3,9 @@
 - **Date:** YYYY-MM-DD
 - **Status:** proposed | accepted | superseded by NNNN
 
+> Save as `.claude/docs/decisions/NNNN_<slug>.md` (underscore, zero-padded number).
+> Status here is the ADR lifecycle, separate from the scribe's task/debt/finding lifecycle.
+
 ## Context
 What problem or force prompted this decision? What constraints were in play?
 

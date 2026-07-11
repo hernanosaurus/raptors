@@ -95,20 +95,33 @@ copy_kit() { # $1=dest .claude dir, $2=copy|link
   # flat bootstrap command (/raptors-install)
   place "$KIT_DIR/commands/raptors-install.md" "$dest/commands/raptors-install.md" "$mode"
 
-  # Scribe scratch space: per-run numbered notes drop here at pipeline end.
+  # Scribe scratch space: one shelf for everything the scribe writes.
   # Same on every project — no stack detection needed, so it belongs in install
   # rather than setup. Never touched if it already exists.
   if [ "$DRY_RUN" = 0 ]; then
-    mkdir -p "$dest/docs/notes"
+    mkdir -p "$dest/docs/notes" \
+             "$dest/docs/findings" \
+             "$dest/docs/tech_debt" \
+             "$dest/docs/backlogs" \
+             "$dest/docs/decisions"
     if [ ! -e "$dest/docs/README.md" ]; then
       cat > "$dest/docs/README.md" <<'EOF'
 # .claude/docs/
 
-Scribe scratch space. The `scribe` agent drops one numbered note per pipeline
-run in `notes/` (e.g. `notes/0001-add-login.md`). Run `/raptors:digest` to fold
-accumulated notes into `CLAUDE.md` / `README.md` after human review.
+One shelf for everything the `scribe` agent writes. Nothing here loads
+automatically — it's a journal + reference material, not always-on context.
 
-Nothing here is loaded automatically by agents — it's a journal, not context.
+Layout:
+- `notes/`     — per-run journal (one file per pipeline run)
+- `findings/`  — durable findings from `/raptors:explore` (with lifecycle status)
+- `tech_debt/` — debt items from `/raptors:debt` (with lifecycle status)
+- `backlogs/`  — backlog tasks from `/raptors:kickoff` (with lifecycle status)
+- `decisions/` — architectural decision records (ADRs)
+
+Lifecycle status (in file frontmatter): `pending | in_progress | partial | done`.
+
+Run `/raptors:digest` to fold anything worth keeping into `CLAUDE.md` /
+`README.md` at the repo root, after human review.
 EOF
     fi
   fi

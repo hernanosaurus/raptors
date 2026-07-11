@@ -1,0 +1,17 @@
+---
+status: pending
+title: <one-line task>
+phase: MVP
+# depends_on: [0002, 0005]
+date: YYYY-MM-DD
+# completed: YYYY-MM-DD   (set when status == done)
+---
+
+## Goal
+What "done" looks like — the outcome, not the implementation.
+
+## Notes
+Constraints, references, anything the shipper needs to know.
+
+## Progress
+- YYYY-MM-DD: captured

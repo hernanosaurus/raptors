@@ -21,9 +21,13 @@ Read the flag (strip it from the scope before passing it on):
    - Duplicated logic, drift from conventions, oversized modules.
    - Outdated patterns the rest of the codebase has moved past.
    Produce a prioritized debt list (impact × risk × effort), each item with `path:line`.
-2. **Pause and present the list to the user.** Let them pick which items to act on. Do NOT clean up everything automatically — debt cleanup without consent is how things break.
-3. For each **approved** item, run a scoped cleanup: **planner → coder → tester → reviewer** (reuse the `/raptors:ship` discipline), passing the verification mode chosen above to the tester. Keep each batch small and independently reviewable.
-4. **scribe** — if cleanup revealed a convention worth codifying ("we no longer use X pattern"), record it so debt doesn't re-accumulate.
+2. **scribe** (capture the audit) — for each item in the prioritized list, drop a file at `.claude/docs/tech_debt/NNNN_<slug>.md` with `status: pending`. Use `templates/tech_debt.md.template`. This records the finding even if the user defers acting on it, so debt doesn't get re-discovered every audit.
+3. **Pause and present the list to the user.** Reference the newly written files by path. Let them pick which items to act on. Do NOT clean up everything automatically — debt cleanup without consent is how things break.
+4. For each **approved** item:
+   - Have the **scribe** flip that item's status to `in_progress` (and add a `Progress` line with the date).
+   - Run a scoped cleanup: **planner → coder → tester → reviewer** (reuse the `/raptors:ship` discipline), passing the verification mode chosen above to the tester. Keep each batch small and independently reviewable.
+   - After review passes, the **scribe** flips status to `done` (add `completed:` date) — or `partial` if only some of the item landed (record what's left).
+5. **scribe** (final pass) — if cleanup revealed a convention worth codifying ("we no longer use X pattern"), drop a note in `.claude/docs/notes/` so `/raptors:digest` can promote it into `CLAUDE.md`.
 
 ## Rules
 
@@ -39,7 +43,8 @@ Read the flag (strip it from the scope before passing it on):
 **Mode:** verify (no tests) | test (tests authored).
 **Audited:** scope.
 **Debt found:** prioritized list (with path refs).
-**Cleaned up (approved):** what changed, per batch, with verification status.
-**Deferred:** what the user chose not to do (kept as a record).
-**Conventions codified:** anything the scribe recorded.
+**Captured:** `.claude/docs/tech_debt/NNNN_*.md` files written (count + paths).
+**Cleaned up (approved):** what changed, per batch, with verification status + which tech_debt files flipped to `done` / `partial`.
+**Deferred:** what the user chose not to do — still on file as `pending`.
+**Conventions codified:** any notes the scribe dropped for the next digest.
 ```

@@ -1,0 +1,20 @@
+---
+status: pending
+title: <one-line debt item>
+severity: low | medium | high
+found_by: researcher | reviewer | security-reviewer
+date: YYYY-MM-DD
+# completed: YYYY-MM-DD   (set when status == done)
+---
+
+## Where
+- `path:line` — what's wrong here
+
+## Why it's debt
+The cost / risk if left. What breaks or slows down because of it.
+
+## Proposed cleanup
+Approach (not code). Behavior-preserving unless flagged otherwise.
+
+## Progress
+- YYYY-MM-DD: captured

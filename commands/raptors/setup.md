@@ -28,9 +28,9 @@ KIT="$(raptors where 2>/dev/null || echo "$HOME/Documents/raptors")"
    - Scaffold `.mcp.json` (repo root) from `$KIT/templates/mcp.json.template` with the chosen servers, using **env var references for secrets — never literal credentials.**
    - Remind the user to add the real env values to their shell/.env (gitignored) and that `.mcp.json` may need to be added to version control or not, per their preference.
 
-5. **Decision records:** if the project will track architectural decisions, create `docs/decisions/` and copy `$KIT/templates/decision.md.template` as a starting point (the scribe uses this format).
+5. **Decision records:** the scribe's shelf at `.claude/docs/decisions/` is created by `raptors install`. You don't need to do anything here — decisions are written per-run when a real architectural call is made, following `$KIT/templates/decision.md.template`.
 
-> Note: `.claude/docs/notes/` (the scribe's per-run journal) is created by `raptors install` — you don't need to do anything here.
+> Note: the full scribe shelf (`.claude/docs/notes/`, `findings/`, `tech_debt/`, `backlogs/`, `decisions/`) is created by `raptors install` — you don't need to do anything here.
 
 ## Rules
 
@@ -46,6 +46,6 @@ KIT="$(raptors where 2>/dev/null || echo "$HOME/Documents/raptors")"
 **settings.json:** created / merged — permissions added.
 **CLAUDE.md:** present / created / suggested onboard.
 **MCP:** configured (which servers) / skipped.
-**Decision records:** docs/decisions/ ready / skipped.
+**Decision records:** `.claude/docs/decisions/` ready (scribe writes per-run).
 **Next:** "you're set — run `/raptors:onboard` (existing repo) or `/raptors:kickoff` (new app)."
 ```

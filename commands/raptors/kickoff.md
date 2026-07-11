@@ -18,7 +18,7 @@ Goal: go from an idea to a repo you can immediately start `/raptors:ship`-ing in
 3. **coder** — execute the scaffold plan: init the project, install dependencies (authorized here — this is a greenfield setup), create the directory structure, and a minimal "it builds and runs" skeleton.
    - **Dependency installs and project init are explicitly authorized for this command** (the normal "no package.json changes" rule is lifted for scaffolding).
 4. **tester** — set up the test harness and add one smoke test that proves the skeleton runs green.
-5. **scribe** — write the first `CLAUDE.md` (stack, verify commands, conventions, structure) from the architect's design, and seed `docs/backlog.md` with the strategist's ordered tasks (as a checklist, MVP cut line marked) + an initial architecture note. `/raptors:status` and later `/raptors:ship` runs keep this backlog current.
+5. **scribe** — write the first `CLAUDE.md` (stack, verify commands, conventions, structure) from the architect's design, and seed the backlog as **one file per task** in `.claude/docs/backlogs/NNNN_<slug>.md` using `templates/backlog.md.template`. Number them in the strategist's order; set `phase:` (MVP / post-MVP / phase-2 / …) so phased work is visually grouped. All start `status: pending`. Also drop an initial architecture note in `.claude/docs/notes/`. `/raptors:status` and later `/raptors:ship` runs keep the per-task status current.
 
 ## Rules
 
@@ -35,6 +35,6 @@ Goal: go from an idea to a repo you can immediately start `/raptors:ship`-ing in
 **Stack:** chosen stack + why (brief).
 **Scaffolded:** what now exists (structure, skeleton, smoke test status).
 **CLAUDE.md:** written — the team now has conventions to follow.
-**Backlog:** the ordered tasks (T1..Tn) with the MVP cut line.
-**Next:** "run `/raptors:ship T1` to build the first task."
+**Backlog:** the ordered tasks — one file per task in `.claude/docs/backlogs/` (grouped by phase, MVP first).
+**Next:** "run `/raptors:ship 0001` to build the first backlog task."
 ```
