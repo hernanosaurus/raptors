@@ -53,6 +53,7 @@ and autocomplete shows the whole pack.
 |---|---|---|
 | **/raptors:council** `<idea>` | critic ∥ reframer ∥ optimist ∥ outsider ∥ operator → chairman → scribe | Verdict on whether to pursue: pursue / reframe / defer / kill (no code) |
 | **/raptors:outsider** `<target>` | outsider | Fresh-eyes reaction to a page, spec, flow, or copy — product feedback |
+| **/raptors:design-review** `[target]` | designer (review mode) | Scored UI/UX critique of a screenshot, component, feature, or whole frontend — prioritized fixes tied to 17 design principles |
 | **/raptors:kickoff** `<idea>` | strategist → architect → coder → tester → scribe | A scaffolded, runnable project + first CLAUDE.md + backlog (from scratch) |
 | **/raptors:setup** `[mcp]` | — (config helper) | Tuned settings.json, optional .mcp.json, ensures CLAUDE.md — run once per repo |
 | **/raptors:status** | — (read-only) | What's shipped / in flight / next, from the backlog |
