@@ -60,6 +60,7 @@ and autocomplete shows the whole pack.
 | **/raptors:ship** `<task>` `[--verify\|--test]` | (architect) → planner → (designer) → coder → tester → (security) → reviewer → scribe | Working, verified, reviewed change + captured knowledge |
 | **/raptors:fix** `<bug>` `[--verify\|--test]` | debugger → planner → coder → tester → (security) → reviewer → scribe | Root-caused, verified fix + lesson recorded |
 | **/raptors:triage** `<idea>` | strategist → planner | A ready-to-ship scoped task (no code) |
+| **/raptors:backlog** `<idea/list/epic>` | strategist → scribe | One or many tickets filed under `.claude/docs/backlogs/` (no code, no plan) |
 | **/raptors:review** `[base/PR]` | (tester) → reviewer | Verdict on a diff |
 | **/raptors:explore** `<question>` | researcher(s) | A cited map of the codebase |
 | **/raptors:onboard** `[area]` | researcher(s) → scribe | Project mental model, persisted to CLAUDE.md |
