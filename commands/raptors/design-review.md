@@ -7,7 +7,7 @@ You are running the **designer** solo in **review mode** on:
 
 > $ARGUMENTS
 
-This is a UI/UX critique, not a spec-for-coder pass. The designer evaluates the target against 17 behavioral-design principles (cognitive load, momentum, ownership, feedback, accessibility, hierarchy, business impact, etc.) and returns a scored report with prioritized fixes.
+This is a UI/UX critique, not a spec-for-coder pass. The designer evaluates the target against 18 behavioral-design principles (cognitive load, momentum, ownership, feedback, accessibility, hierarchy, business impact, etc.) and returns a scored report with prioritized fixes.
 
 ## Interpreting $ARGUMENTS
 
@@ -37,7 +37,7 @@ If `$ARGUMENTS` is ambiguous (e.g. a string that could be a feature name or a pa
 
 - **Read before critiquing.** No hallucinated critique of files/screens that don't exist. If the target can't be located, say so and stop.
 - **No production code changes.** The designer never writes code, and this command never does either.
-- **Cite the principle.** Every issue and every recommendation must reference which of the 17 principles it's tied to — that's the value.
+- **Cite the principle.** Every issue and every recommendation must reference which of the 18 principles it's tied to — that's the value.
 - **Prioritize.** A flat list of everything wrong isn't useful. The designer must rank by severity and impact.
 - **Respect the design system.** If the project has an established visual language, work within it — don't propose sweeping restyles unless the design system itself is the problem.
 
