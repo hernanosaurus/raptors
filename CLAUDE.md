@@ -2,7 +2,7 @@
 
 > This file is for working **on the raptors kit itself**. It is NOT copied into
 > projects — `raptors install` only copies `agents/` and `commands/`. A target
-> project gets its own `CLAUDE.md`. (How to *use* the pack lives in [README.md](README.md).)
+> project gets its own `CLAUDE.md`. (How to _use_ the pack lives in [README.md](README.md).)
 
 ## What this repo is
 
@@ -14,11 +14,11 @@ path, or project.** Agents discover conventions at runtime from the target repo'
 
 ## The three layers (keep them separate)
 
-| Layer | Lives in | Per-project? |
-|---|---|---|
-| Agents (roles) | `agents/*.md` | No — generic |
-| Commands (pipelines) | `commands/raptors/*.md` + `commands/raptors-install.md` | No — generic |
-| Project config (stack, settings, mcp) | the *target* repo (`CLAUDE.md`, `.claude/settings.json`, `.mcp.json`) | Yes |
+| Layer                                 | Lives in                                                              | Per-project? |
+| ------------------------------------- | --------------------------------------------------------------------- | ------------ |
+| Agents (roles)                        | `agents/*.md`                                                         | No — generic |
+| Commands (pipelines)                  | `commands/raptors/*.md` + `commands/raptors-install.md`               | No — generic |
+| Project config (stack, settings, mcp) | the _target_ repo (`CLAUDE.md`, `.claude/settings.json`, `.mcp.json`) | Yes          |
 
 If you're tempted to put a stack-specific rule in an agent, it belongs in the
 target project's `CLAUDE.md` instead (or `templates/CLAUDE.md.template`).
