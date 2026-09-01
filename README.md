@@ -126,7 +126,8 @@ Two equivalent ways — pick whichever fits the moment:
 **From the terminal (the `raptors` command):**
 ```bash
 cd /path/to/project
-raptors install .           # copy agents+commands into ./.claude
+raptors install .           # copy agents+commands into ./.claude — personal by default
+raptors install . --shared  # OR install so the team can commit .claude/ to the repo
 raptors install . --dry-run # preview what would change — writes nothing
 raptors link .              # OR symlink them (pack edits auto-propagate)
 raptors update .            # re-copy latest pack files after you pull updates
@@ -134,6 +135,13 @@ raptors remove .            # recall the pack (leaves CLAUDE.md and .bak files a
 raptors where               # print the pack's source path
 raptors help                # all subcommands
 ```
+
+**Personal by default.** `raptors install` treats the pack as *your* tooling and adds
+`.claude/` to the project's `.gitignore` so it never leaks into commits. Re-installing
+never duplicates the entry; if the repo already has an `!.claude/` un-ignore rule (a
+team that deliberately shares the pack), it's respected — nothing is added. Pass
+`--shared` when the team wants the pack committed alongside the code. `update` /
+`update-all` never touch `.gitignore` — the sharing decision is made at install time.
 
 **Safe to run on a repo that already has a `.claude/`.** The installer only writes
 the files it owns; your other agents/commands are untouched. If a name *does* collide

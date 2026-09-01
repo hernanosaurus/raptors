@@ -16,9 +16,15 @@
 #
 # Flags (for install/link/update):
 #   --dry-run                 Show what would change (add/overwrite/skip) without writing
+#   --shared                  (install/link only) Do NOT gitignore .claude/. Use when
+#                             the team wants the pack committed. Default is personal:
+#                             install adds .claude/ to the repo's .gitignore so the
+#                             pack stays local unless you opt in to sharing.
 #
 # Safety: any existing file that would be overwritten is first backed up to
 # <name>.bak so a repo's own agents/commands are never silently lost.
+# The .gitignore entry is idempotent — re-installing never duplicates the line, and
+# an existing `!.claude/` un-ignore rule is respected (nothing is added).
 #
 set -euo pipefail
 
@@ -53,10 +59,51 @@ AGENTS=("strategist" "researcher" "architect" "planner" "designer" "coder" \
 # Pack commands live in commands/raptors/ → invoked as /raptors:ship etc.
 COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "backlog" "review" "explore" "onboard" "debt" "audit" "release" "digest" "council" "outsider" "design-review" "pdp-review" "integrate" "evaluate" "rca" "handoff")
 
-usage() { sed -n '3,21p' "$0" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '3,27p' "$0" | sed 's/^# \{0,1\}//'; }
 
 DRY_RUN=0
+SHARED=0
 N_ADD=0; N_OVER=0; N_SKIP=0
+
+# Add .claude/ to <project>/.gitignore unless SHARED=1. Idempotent — never
+# duplicates the entry; respects an existing `!.claude/` un-ignore rule.
+# Prints exactly one status line so the install output stays scannable.
+ensure_gitignore() { # $1=project dir
+  local proj="$1" gi="$1/.gitignore"
+
+  if [ "$SHARED" = 1 ]; then
+    echo "  gitignore skipped   (--shared: .claude/ will be tracked)"
+    return
+  fi
+
+  if [ "$DRY_RUN" = 1 ]; then
+    if [ -f "$gi" ] && grep -qE '^!\.claude/?$' "$gi"; then
+      echo "  gitignore skipped   (existing !.claude/ un-ignore rule respected)"
+    elif [ -f "$gi" ] && grep -qE '^\.claude/?$' "$gi"; then
+      echo "  gitignore unchanged (.claude/ already ignored)"
+    else
+      echo "  gitignore would add .claude/ (use --shared to opt out)"
+    fi
+    return
+  fi
+
+  # Real run.
+  if [ -f "$gi" ] && grep -qE '^!\.claude/?$' "$gi"; then
+    echo "  gitignore skipped   (existing !.claude/ un-ignore rule respected)"
+    return
+  fi
+  if [ -f "$gi" ] && grep -qE '^\.claude/?$' "$gi"; then
+    echo "  gitignore unchanged (.claude/ already ignored)"
+    return
+  fi
+  # Append a labeled block so the entry is discoverable and easy to remove.
+  {
+    [ -f "$gi" ] && [ -s "$gi" ] && [ "$(tail -c1 "$gi" 2>/dev/null)" != "" ] && echo ""
+    echo "# raptors — personal AI pack (opt-in to share with 'raptors install --shared')"
+    echo ".claude/"
+  } >> "$gi"
+  echo "  gitignore added     .claude/ (personal — use --shared to commit the pack)"
+}
 
 place() { # $1=src file, $2=dest file, $3=copy|link
   local src="$1" dst="$2" mode="$3" rel="${2#"$DEST_ROOT"/}"
@@ -138,12 +185,13 @@ EOF
   fi
 }
 
-# Parse: subcommand, optional --dry-run anywhere, optional target dir.
+# Parse: subcommand, optional --dry-run / --shared anywhere, optional target dir.
 cmd="${1:-help}"; shift || true
 target=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --dry-run) DRY_RUN=1; shift ;;
+    --shared)  SHARED=1;  shift ;;
     *) target="$1"; shift ;;
   esac
 done
@@ -154,6 +202,7 @@ case "$cmd" in
   install)
     echo "Releasing the raptors into $target/.claude (copy):"
     copy_kit "$target/.claude" copy
+    ensure_gitignore "$target"
     [ "$DRY_RUN" = 1 ] && exit 0
     reg_add "$target"
     [ -f "$target/CLAUDE.md" ] || {
@@ -164,6 +213,7 @@ case "$cmd" in
   link)
     echo "Linking the raptors into $target/.claude (symlinks):"
     copy_kit "$target/.claude" link
+    ensure_gitignore "$target"
     [ "$DRY_RUN" = 1 ] || reg_add "$target"
     ;;
   update)
