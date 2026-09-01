@@ -42,6 +42,9 @@ not a dozen agents.
 | **outsider** | Fresh-eyes reaction to an idea, page, or flow — as a first-time user | No |
 | **operator** | Feasibility check + the cheapest test to de-risk the bet | No |
 | **chairman** | Presides over `/raptors:council` — rules pursue / reframe / defer / kill | No |
+| **integrator** | Reads a third-party's API/webhook docs and maps their model to ours — adapter spec (auth, rate limits, failure modes) before the planner | No |
+| **evaluator** | Judges real AI outputs against ground truth — scored failure clusters + ranked interventions (baseline, regression, complaint RCA) | No |
+| **support-liaison** | Translates raw customer input (emails, chats, tickets, call notes) into a clean engineering brief — what they said, what they need, the narrowest clarifying question | No |
 
 ## Pipelines (commands)
 
@@ -53,7 +56,7 @@ and autocomplete shows the whole pack.
 |---|---|---|
 | **/raptors:council** `<idea>` | critic ∥ reframer ∥ optimist ∥ outsider ∥ operator → chairman → scribe | Verdict on whether to pursue: pursue / reframe / defer / kill (no code) |
 | **/raptors:outsider** `<target>` | outsider | Fresh-eyes reaction to a page, spec, flow, or copy — product feedback |
-| **/raptors:design-review** `[target]` | designer (review mode) | Scored UI/UX critique of a screenshot, component, feature, or whole frontend — prioritized fixes tied to 17 design principles |
+| **/raptors:design-review** `[target]` | designer (review mode) | Scored UI/UX critique of a screenshot, component, feature, or whole frontend — prioritized fixes tied to 18 design principles |
 | **/raptors:pdp-review** `<target>` | designer (review mode, PDP focus) | Scored critique of a product detail page against 9 e-commerce conversion patterns (status anchor, imagination-gap imagery, specific social proof, swatches, hover reassurance, subscribe-default cards, bundle disclosure, journey CTA, tailored trust badges) |
 | **/raptors:kickoff** `<idea>` | strategist → architect → coder → tester → scribe | A scaffolded, runnable project + first CLAUDE.md + backlog (from scratch) |
 | **/raptors:setup** `[mcp]` | — (config helper) | Tuned settings.json, optional .mcp.json, ensures CLAUDE.md — run once per repo |
@@ -69,6 +72,10 @@ and autocomplete shows the whole pack.
 | **/raptors:debt** `[area]` `[--verify\|--test]` | researcher + reviewer → (ship per item) → scribe | Prioritized debt, paid down safely with consent |
 | **/raptors:audit** `[scope]` `[--verify\|--test]` | security-reviewer → (ship per fix) → re-audit → scribe | Ranked vulns, remediated with consent |
 | **/raptors:release** `[base/PR/range]` | release-writer | PR description / changelog / release notes |
+| **/raptors:integrate** `<vendor + docs URL / payloads path>` | integrator → planner | Adapter spec (auth, data mapping, rate limits, failure modes) + implementation approach — for wiring third-party APIs (e-commerce, help desks, CRMs, payments) |
+| **/raptors:evaluate** `<traces path / feature / capability>` | (researcher) → evaluator → scribe | Scored report of AI performance — failure clusters, ranked interventions, baseline saved to `findings/`. No prompt or code changes |
+| **/raptors:rca** `<incident / logs / customer message>` | debugger → scribe | Customer-readable root-cause analysis (stakeholder 60-sec read + engineering diagnosis) — no fix applied |
+| **/raptors:handoff** `<feature / integration / area>` | researcher → scribe | Customer-facing handoff document (what it does, how to use it, what to watch, when to call) — for go-live sign-off, not for engineers joining the codebase |
 | **/raptors-install** | — | Bootstrap: releases the pack into the current repo (flat, always-available) |
 
 > The bootstrap command is intentionally flat (`/raptors-install`, not `/raptors:install`)
@@ -200,8 +207,8 @@ The pack is tuned for cost as well as quality — important when one `/raptors:s
 
 | Tier | Agents | Why |
 |---|---|---|
-| **Opus** | architect, planner, debugger, reviewer, security-reviewer, critic, reframer, chairman | Judgment calls where a weaker model costs you in bad plans / missed bugs / mushy decisions |
-| **Sonnet** | coder, tester, strategist, designer, optimist, outsider, operator | Capable execution at a fraction of Opus cost |
+| **Opus** | architect, planner, debugger, reviewer, security-reviewer, critic, reframer, chairman, evaluator | Judgment calls where a weaker model costs you in bad plans / missed bugs / mushy decisions |
+| **Sonnet** | coder, tester, strategist, designer, optimist, outsider, operator, integrator, support-liaison | Capable execution at a fraction of Opus cost |
 | **Haiku** | researcher, scribe, release-writer | Read/search/write-docs — mechanical work, no deep reasoning needed |
 
 This keeps the expensive reasoning on Opus while the grunt work runs cheap. Adjust any agent's `model:` frontmatter to taste.
@@ -227,7 +234,7 @@ raptors/
 ├── bootstrap.sh                 one-time per-machine setup (PATH + bootstrap command)
 ├── install.sh                   thin wrapper around bin/raptors
 ├── bin/raptors                  the CLI you run from any terminal
-├── agents/                      the 18 raptors (flat, role-named)
+├── agents/                      the 21 raptors (flat, role-named)
 ├── commands/
 │   ├── raptors/                 the pipelines → /raptors:<name>
 │   └── raptors-install.md       flat bootstrap → /raptors-install

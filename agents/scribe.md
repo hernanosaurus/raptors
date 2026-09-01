@@ -18,13 +18,14 @@ All scribe-owned material lives under `.claude/docs/` so the human has **one dir
 ```
 .claude/docs/
 ├── notes/       NNNN-<slug>.md         per-run journal (one per pipeline)
-├── findings/    NNNN_<slug>.md         durable findings from /raptors:explore
+├── findings/    NNNN_<slug>.md         durable findings from /raptors:explore (and incident RCAs from /raptors:rca)
 ├── tech_debt/   NNNN_<slug>.md         debt items with lifecycle status
 ├── backlogs/    NNNN_<slug>.md         backlog tasks with lifecycle status
+├── handoffs/    NNNN_<slug>.md         customer-facing handoff docs from /raptors:handoff (with lifecycle status)
 └── decisions/   NNNN_<slug>.md         architectural decision records
 ```
 
-**Status frontmatter** (used by `tech_debt/`, `backlogs/`, and `findings/`): one of `pending | in_progress | partial | done`.
+**Status frontmatter** (used by `tech_debt/`, `backlogs/`, `findings/`, and `handoffs/`): one of `pending | in_progress | partial | done`.
 
 - `pending` — captured, not started
 - `in_progress` — actively being worked on
@@ -49,8 +50,10 @@ You run in one of two modes depending on how you were invoked:
    |---|---|
    | any run (default journal entry) | `.claude/docs/notes/NNNN-<slug>.md` |
    | `/raptors:explore` surfaced something durable | `.claude/docs/findings/NNNN_<slug>.md` |
+   | `/raptors:rca` produced an incident diagnosis | `.claude/docs/findings/NNNN_<slug>.md` |
    | `/raptors:debt` identified/paid down debt | `.claude/docs/tech_debt/NNNN_<slug>.md` |
    | `/raptors:kickoff` seeded a backlog (one file per task) | `.claude/docs/backlogs/NNNN_<slug>.md` |
+   | `/raptors:handoff` produced a customer-facing doc | `.claude/docs/handoffs/NNNN_<slug>.md` |
    | `/raptors:ship` closed / touched a backlog item | update that item's file (status → done, add date) |
    | a real architectural call was made | `.claude/docs/decisions/NNNN_<slug>.md` |
 
@@ -58,11 +61,11 @@ You run in one of two modes depending on how you were invoked:
 
 2. **Read existing files in the target subdir** so you don't duplicate. Skim `CLAUDE.md` too — if something's already there, don't restate it.
 
-3. **Pick the next number.** Scan `.claude/docs/<subdir>/*.md`, take the highest numeric prefix, add one. Zero-pad to 4 digits. If the directory doesn't exist, create it (`mkdir -p`) and start at `0001`. Numbering is **per-subdir** — `notes/`, `tech_debt/`, `backlogs/`, `findings/`, `decisions/` each have their own sequence.
+3. **Pick the next number.** Scan `.claude/docs/<subdir>/*.md`, take the highest numeric prefix, add one. Zero-pad to 4 digits. If the directory doesn't exist, create it (`mkdir -p`) and start at `0001`. Numbering is **per-subdir** — `notes/`, `tech_debt/`, `backlogs/`, `findings/`, `handoffs/`, `decisions/` each have their own sequence.
 
 4. **Write the file.** File-name convention: `notes/` uses `NNNN-<slug>.md` (dash); the others use `NNNN_<slug>.md` (underscore). This makes it visually obvious which shelf you're on.
 
-5. **Update lifecycle status** on any existing `tech_debt/`, `backlogs/`, or `findings/` file the run touched. When flipping to `done`, add a `completed: YYYY-MM-DD` line to frontmatter.
+5. **Update lifecycle status** on any existing `tech_debt/`, `backlogs/`, `findings/`, or `handoffs/` file the run touched. When flipping to `done`, add a `completed: YYYY-MM-DD` line to frontmatter.
 
 6. **Stop there.** Do not touch `CLAUDE.md` or `README.md` in this mode.
 

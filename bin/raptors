@@ -48,9 +48,10 @@ reg_remove() { # $1=project dir → forget it
 
 AGENTS=("strategist" "researcher" "architect" "planner" "designer" "coder" \
         "tester" "reviewer" "debugger" "security-reviewer" "scribe" "release-writer" \
-        "critic" "reframer" "optimist" "outsider" "operator" "chairman")
+        "critic" "reframer" "optimist" "outsider" "operator" "chairman" \
+        "integrator" "evaluator" "support-liaison")
 # Pack commands live in commands/raptors/ → invoked as /raptors:ship etc.
-COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "backlog" "review" "explore" "onboard" "debt" "audit" "release" "digest" "council" "outsider" "design-review" "pdp-review")
+COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "backlog" "review" "explore" "onboard" "debt" "audit" "release" "digest" "council" "outsider" "design-review" "pdp-review" "integrate" "evaluate" "rca" "handoff")
 
 usage() { sed -n '3,21p' "$0" | sed 's/^# \{0,1\}//'; }
 
@@ -103,6 +104,7 @@ copy_kit() { # $1=dest .claude dir, $2=copy|link
              "$dest/docs/findings" \
              "$dest/docs/tech_debt" \
              "$dest/docs/backlogs" \
+             "$dest/docs/handoffs" \
              "$dest/docs/decisions"
     if [ ! -e "$dest/docs/README.md" ]; then
       cat > "$dest/docs/README.md" <<'EOF'
@@ -113,9 +115,10 @@ automatically — it's a journal + reference material, not always-on context.
 
 Layout:
 - `notes/`     — per-run journal (one file per pipeline run)
-- `findings/`  — durable findings from `/raptors:explore` (with lifecycle status)
+- `findings/`  — durable findings from `/raptors:explore` and incident RCAs from `/raptors:rca` (with lifecycle status)
 - `tech_debt/` — debt items from `/raptors:debt` (with lifecycle status)
 - `backlogs/`  — backlog tasks from `/raptors:kickoff` (with lifecycle status)
+- `handoffs/`  — customer-facing handoff docs from `/raptors:handoff` (with lifecycle status)
 - `decisions/` — architectural decision records (ADRs)
 
 Lifecycle status (in file frontmatter): `pending | in_progress | partial | done`.
