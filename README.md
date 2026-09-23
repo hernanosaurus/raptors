@@ -29,6 +29,7 @@ not a dozen agents.
 | **researcher** | Read-only codebase recon, cited findings | No |
 | **planner** | Scoped task → concrete step-by-step plan | No |
 | **designer** *(optional)* | UI/UX spec before coding (frontend work) | No |
+| **stylist** *(optional)* | Owns the 17-style visual vocabulary across 3 axes (Layout, Aesthetic, Motion) — proposes combinations, produces Style Cards, audits style coherence | No |
 | **coder** | Execute the plan → working code | Yes |
 | **tester** | Write tests, get the suite green | Tests only |
 | **reviewer** | Judge the diff → APPROVE / REQUEST_CHANGES | No |
@@ -58,6 +59,9 @@ and autocomplete shows the whole pack.
 | **/raptors:outsider** `<target>` | outsider | Fresh-eyes reaction to a page, spec, flow, or copy — product feedback |
 | **/raptors:design-review** `[target]` | designer (review mode) | Scored UI/UX critique of a screenshot, component, feature, or whole frontend — prioritized fixes tied to 18 design principles |
 | **/raptors:pdp-review** `<target>` | designer (review mode, PDP focus) | Scored critique of a product detail page against 9 e-commerce conversion patterns (status anchor, imagination-gap imagery, specific social proof, swatches, hover reassurance, subscribe-default cards, bundle disclosure, journey CTA, tailored trust badges) |
+| **/raptors:style-explore** `<brief>` | stylist (explore mode) | Menu of 2-3 named visual-style combinations (Layout × Aesthetic × Motion — 17 styles across 3 axes) with exemplars, rationale, and tradeoffs — no spec, no code |
+| **/raptors:style-spec** `<brief + combination>` | stylist → designer | Style Card (visual/motion contract) + full UX spec locked to it — layout, states, copy, accessibility, interactions honoring the chosen style |
+| **/raptors:style-review** `<target [+ style]>` | stylist (review mode) | Per-axis coherence audit — does this UI actually hold its declared (or inferred) style, or is it drifting? Distinct from `design-review` (UX principles) |
 | **/raptors:kickoff** `<idea>` | strategist → architect → coder → tester → scribe | A scaffolded, runnable project + first CLAUDE.md + backlog (from scratch) |
 | **/raptors:setup** `[mcp]` | — (config helper) | Tuned settings.json, optional .mcp.json, ensures CLAUDE.md — run once per repo |
 | **/raptors:status** | — (read-only) | What's shipped / in flight / next, from the backlog |
@@ -216,7 +220,7 @@ The pack is tuned for cost as well as quality — important when one `/raptors:s
 | Tier | Agents | Why |
 |---|---|---|
 | **Opus** | architect, planner, debugger, reviewer, security-reviewer, critic, reframer, chairman, evaluator | Judgment calls where a weaker model costs you in bad plans / missed bugs / mushy decisions |
-| **Sonnet** | coder, tester, strategist, designer, optimist, outsider, operator, integrator, support-liaison | Capable execution at a fraction of Opus cost |
+| **Sonnet** | coder, tester, strategist, designer, stylist, optimist, outsider, operator, integrator, support-liaison | Capable execution at a fraction of Opus cost |
 | **Haiku** | researcher, scribe, release-writer | Read/search/write-docs — mechanical work, no deep reasoning needed |
 
 This keeps the expensive reasoning on Opus while the grunt work runs cheap. Adjust any agent's `model:` frontmatter to taste.
@@ -242,7 +246,7 @@ raptors/
 ├── bootstrap.sh                 one-time per-machine setup (PATH + bootstrap command)
 ├── install.sh                   thin wrapper around bin/raptors
 ├── bin/raptors                  the CLI you run from any terminal
-├── agents/                      the 21 raptors (flat, role-named)
+├── agents/                      the 22 raptors (flat, role-named)
 ├── commands/
 │   ├── raptors/                 the pipelines → /raptors:<name>
 │   └── raptors-install.md       flat bootstrap → /raptors-install

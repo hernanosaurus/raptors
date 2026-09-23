@@ -52,12 +52,12 @@ reg_remove() { # $1=project dir → forget it
   mv "$REGISTRY.tmp" "$REGISTRY" 2>/dev/null || true
 }
 
-AGENTS=("strategist" "researcher" "architect" "planner" "designer" "coder" \
+AGENTS=("strategist" "researcher" "architect" "planner" "designer" "stylist" "coder" \
         "tester" "reviewer" "debugger" "security-reviewer" "scribe" "release-writer" \
         "critic" "reframer" "optimist" "outsider" "operator" "chairman" \
         "integrator" "evaluator" "support-liaison")
 # Pack commands live in commands/raptors/ → invoked as /raptors:ship etc.
-COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "backlog" "review" "explore" "onboard" "debt" "audit" "release" "digest" "council" "outsider" "design-review" "pdp-review" "integrate" "evaluate" "rca" "handoff")
+COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "backlog" "review" "explore" "onboard" "debt" "audit" "release" "digest" "council" "outsider" "design-review" "pdp-review" "style-explore" "style-spec" "style-review" "integrate" "evaluate" "rca" "handoff")
 
 usage() { sed -n '3,27p' "$0" | sed 's/^# \{0,1\}//'; }
 
