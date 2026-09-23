@@ -30,6 +30,9 @@ not a dozen agents.
 | **planner** | Scoped task → concrete step-by-step plan | No |
 | **designer** *(optional)* | UI/UX spec before coding (frontend work) | No |
 | **stylist** *(optional)* | Owns the 17-style visual vocabulary across 3 axes (Layout, Aesthetic, Motion) — proposes combinations, produces Style Cards, audits style coherence | No |
+| **copywriter** *(optional)* | Writes and audits conversion copy — headlines, subheads, CTAs, objection handling, above-the-fold selling — against 22 principles | No |
+| **web-polish** *(optional)* | Audits a site for the 25 table-stakes production features (hover states, 404, mobile menu, dark mode, search, cookie banner, skip links, print stylesheet, etc.) | No |
+| **seo** *(optional)* | Owns findability — on-page (titles, meta, headers, schema), technical (sitemap, robots, canonical, HTTPS), performance (Core Web Vitals), and content/authority against 25 fundamentals | No |
 | **coder** | Execute the plan → working code | Yes |
 | **tester** | Write tests, get the suite green | Tests only |
 | **reviewer** | Judge the diff → APPROVE / REQUEST_CHANGES | No |
@@ -62,6 +65,9 @@ and autocomplete shows the whole pack.
 | **/raptors:style-explore** `<brief>` | stylist (explore mode) | Menu of 2-3 named visual-style combinations (Layout × Aesthetic × Motion — 17 styles across 3 axes) with exemplars, rationale, and tradeoffs — no spec, no code |
 | **/raptors:style-spec** `<brief + combination>` | stylist → designer | Style Card (visual/motion contract) + full UX spec locked to it — layout, states, copy, accessibility, interactions honoring the chosen style |
 | **/raptors:style-review** `<target [+ style]>` | stylist (review mode) | Per-axis coherence audit — does this UI actually hold its declared (or inferred) style, or is it drifting? Distinct from `design-review` (UX principles) |
+| **/raptors:copy-review** `<target>` | copywriter (review mode) | Scored critique of landing/marketing/product copy against 22 conversion principles + concrete rewrites for the highest-impact issues |
+| **/raptors:polish-review** `[target]` | web-polish | Production-readiness audit — walks the 25 table-stakes feature checklist, scores by section, ranks gaps by user impact |
+| **/raptors:seo-review** `[target]` | seo (review mode) | Findability audit against 25 SEO fundamentals — on-page, technical, performance, content/authority — with black-hat pattern detection |
 | **/raptors:kickoff** `<idea>` | strategist → architect → coder → tester → scribe | A scaffolded, runnable project + first CLAUDE.md + backlog (from scratch) |
 | **/raptors:setup** `[mcp]` | — (config helper) | Tuned settings.json, optional .mcp.json, ensures CLAUDE.md — run once per repo |
 | **/raptors:status** | — (read-only) | What's shipped / in flight / next, from the backlog |
@@ -220,7 +226,7 @@ The pack is tuned for cost as well as quality — important when one `/raptors:s
 | Tier | Agents | Why |
 |---|---|---|
 | **Opus** | architect, planner, debugger, reviewer, security-reviewer, critic, reframer, chairman, evaluator | Judgment calls where a weaker model costs you in bad plans / missed bugs / mushy decisions |
-| **Sonnet** | coder, tester, strategist, designer, stylist, optimist, outsider, operator, integrator, support-liaison | Capable execution at a fraction of Opus cost |
+| **Sonnet** | coder, tester, strategist, designer, stylist, copywriter, web-polish, seo, optimist, outsider, operator, integrator, support-liaison | Capable execution at a fraction of Opus cost |
 | **Haiku** | researcher, scribe, release-writer | Read/search/write-docs — mechanical work, no deep reasoning needed |
 
 This keeps the expensive reasoning on Opus while the grunt work runs cheap. Adjust any agent's `model:` frontmatter to taste.
@@ -246,7 +252,7 @@ raptors/
 ├── bootstrap.sh                 one-time per-machine setup (PATH + bootstrap command)
 ├── install.sh                   thin wrapper around bin/raptors
 ├── bin/raptors                  the CLI you run from any terminal
-├── agents/                      the 22 raptors (flat, role-named)
+├── agents/                      the 25 raptors (flat, role-named)
 ├── commands/
 │   ├── raptors/                 the pipelines → /raptors:<name>
 │   └── raptors-install.md       flat bootstrap → /raptors-install
