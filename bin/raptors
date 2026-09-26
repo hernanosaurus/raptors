@@ -57,7 +57,7 @@ AGENTS=("strategist" "researcher" "architect" "planner" "designer" "stylist" "co
         "critic" "reframer" "optimist" "outsider" "operator" "chairman" \
         "integrator" "evaluator" "support-liaison")
 # Pack commands live in commands/raptors/ → invoked as /raptors:ship etc.
-COMMANDS=("kickoff" "setup" "status" "ship" "fix" "triage" "backlog" "review" "explore" "onboard" "debt" "audit" "release" "digest" "council" "outsider" "design-review" "pdp-review" "style-explore" "style-spec" "style-review" "copy-review" "polish-review" "seo-review" "integrate" "evaluate" "rca" "handoff")
+COMMANDS=("kickoff" "setup" "status" "ship" "build" "build-debt" "fix" "triage" "backlog" "review" "explore" "onboard" "debt" "audit" "release" "digest" "council" "outsider" "design-review" "pdp-review" "style-explore" "style-spec" "style-review" "copy-review" "polish-review" "seo-review" "integrate" "evaluate" "rca" "handoff")
 
 usage() { sed -n '3,27p' "$0" | sed 's/^# \{0,1\}//'; }
 
